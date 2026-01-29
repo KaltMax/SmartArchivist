@@ -1,0 +1,244 @@
+services:
+  smartarchivist-webui:
+    container_name: smartarchivist-webui
+    build:
+      context: ./SmartArchivist.WebUi
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - smartarchivist-rest
+      - adminer
+    networks:
+      - smartarchivist-net
+    restart: unless-stopped
+
+  smartarchivist-rest:
+    container_name: smartarchivist-rest
+    build:
+      context: .
+      dockerfile: SmartArchivist.Api/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ASPNETCORE_HTTP_PORTS=${ASPNETCORE_HTTP_PORTS}
+      - ConnectionStrings__SmartArchivistDb=Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      - MinIO__Endpoint=${MINIO_ENDPOINT}
+      - MinIO__AccessKey=${MINIO_ACCESS_KEY}
+      - MinIO__SecretKey=${MINIO_SECRET_KEY}
+      - MinIO__BucketName=${MINIO_BUCKET_NAME}
+      - MinIO__UseSSL=${MINIO_USE_SSL}
+      - RabbitMQ__HostName=${RABBITMQ_HOST}
+      - RabbitMQ__Port=${RABBITMQ_PORT}
+      - RabbitMQ__UserName=${RABBITMQ_USER}
+      - RabbitMQ__Password=${RABBITMQ_PASSWORD}
+      - RabbitMQ__VirtualHost=${RABBITMQ_VIRTUAL_HOST}
+      - ElasticSearch__Url=${ELASTICSEARCH_URL}
+      - ElasticSearch__IndexName=${ELASTICSEARCH_INDEX_NAME}
+      - ElasticSearch__MaxSearchResults=${ELASTICSEARCH_MAX_SEARCH_RESULTS}
+      - Jwt__Secret=${JWT_SECRET}
+      - Jwt__Issuer=${JWT_ISSUER}
+      - Jwt__Audience=${JWT_AUDIENCE}
+      - LicenceKeys__AutoMapperLicenceKey=${AUTOMAPPER_LICENSE_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - smartarchivist-net
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:17
+    container_name: smartarchivist-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - smartarchivist-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  adminer:
+    image: adminer:5.4.0
+    container_name: smartarchivist-adminer
+    environment:
+      - ADMINER_DEFAULT_SERVER=postgres
+    depends_on:
+      - postgres
+    networks:
+      - smartarchivist-net
+    restart: unless-stopped
+
+  rabbitmq:
+    image: rabbitmq:4.1-management
+    container_name: smartarchivist-rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - smartarchivist-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: minio/minio:latest
+    container_name: smartarchivist-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_LOG_QUERY: "on"
+    volumes:
+      - minio_data:/data
+    networks:
+      - smartarchivist-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.2.2
+    container_name: smartarchivist-elasticsearch
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - smartarchivist-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:9.2.2
+    container_name: smartarchivist-kibana
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    networks:
+      - smartarchivist-net
+    restart: unless-stopped
+
+  smartarchivist-ocr:
+    container_name: smartarchivist-ocr
+    build:
+      context: .
+      dockerfile: SmartArchivist.Ocr/Dockerfile
+    environment:
+      - SMARTARCHIVIST_DB_CONNECTION=Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      - MinIO__Endpoint=${MINIO_ENDPOINT}
+      - MinIO__AccessKey=${MINIO_ACCESS_KEY}
+      - MinIO__SecretKey=${MINIO_SECRET_KEY}
+      - MinIO__BucketName=${MINIO_BUCKET_NAME}
+      - MinIO__UseSSL=${MINIO_USE_SSL}
+      - RabbitMQ__HostName=${RABBITMQ_HOST}
+      - RabbitMQ__Port=${RABBITMQ_PORT}
+      - RabbitMQ__UserName=${RABBITMQ_USER}
+      - RabbitMQ__Password=${RABBITMQ_PASSWORD}
+      - RabbitMQ__VirtualHost=${RABBITMQ_VIRTUAL_HOST}
+      - Ocr__TessDataPath=${OCR_TESSDATA_PATH}
+      - Ocr__Languages=${OCR_LANGUAGES}
+      - Ocr__EngineMode=${OCR_ENGINE_MODE}
+      - Ocr__ConversionDpi=${OCR_CONVERSION_DPI}
+      - LicenceKeys__AutoMapperLicenceKey=${AUTOMAPPER_LICENSE_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    networks:
+      - smartarchivist-net
+    restart: unless-stopped
+
+  smartarchivist-genai:
+    container_name: smartarchivist-genai
+    build:
+      context: .
+      dockerfile: SmartArchivist.GenAi/Dockerfile
+    environment:
+      - SMARTARCHIVIST_DB_CONNECTION=Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      - RabbitMQ__HostName=${RABBITMQ_HOST}
+      - RabbitMQ__Port=${RABBITMQ_PORT}
+      - RabbitMQ__UserName=${RABBITMQ_USER}
+      - RabbitMQ__Password=${RABBITMQ_PASSWORD}
+      - RabbitMQ__VirtualHost=${RABBITMQ_VIRTUAL_HOST}
+      - GenAi__ApiKey=${GENAI_API_KEY}
+      - GenAi__ApiUrl=${GENAI_API_URL}
+      - GenAi__TimeoutSeconds=${GENAI_TIMEOUT_SECONDS}
+      - GenAi__SystemPrompt=${GENAI_SYSTEM_PROMPT}
+      - LicenceKeys__AutoMapperLicenceKey=${AUTOMAPPER_LICENSE_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - smartarchivist-net
+    restart: unless-stopped
+
+  smartarchivist-indexing:
+    container_name: smartarchivist-indexing
+    build:
+      context: .
+      dockerfile: SmartArchivist.Indexing/Dockerfile
+    environment:
+      - SMARTARCHIVIST_DB_CONNECTION=Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      - RabbitMQ__HostName=${RABBITMQ_HOST}
+      - RabbitMQ__Port=${RABBITMQ_PORT}
+      - RabbitMQ__UserName=${RABBITMQ_USER}
+      - RabbitMQ__Password=${RABBITMQ_PASSWORD}
+      - RabbitMQ__VirtualHost=${RABBITMQ_VIRTUAL_HOST}
+      - ElasticSearch__Url=${ELASTICSEARCH_URL}
+      - ElasticSearch__IndexName=${ELASTICSEARCH_INDEX_NAME}
+      - ElasticSearch__MaxSearchResults=${ELASTICSEARCH_MAX_SEARCH_RESULTS}
+      - LicenceKeys__AutoMapperLicenceKey=${AUTOMAPPER_LICENSE_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - smartarchivist-net
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  rabbitmq_data:
+  minio_data:
+  elasticsearch-data:
+
+networks:
+  smartarchivist-net:
+    driver: bridge

@@ -1,0 +1,51 @@
+@SmartArchivistApi_HostAddress = http://localhost:8081
+@documentId = replace-with-actual-id
+
+### Get all documents
+GET {{SmartArchivistApi_HostAddress}}/api/documents
+Accept: application/json
+
+###
+
+### Upload document
+POST {{SmartArchivistApi_HostAddress}}/api/documents/upload
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="Name"
+
+Test Document
+--boundary
+Content-Disposition: form-data; name="File"; filename="test.pdf"
+Content-Type: application/pdf
+
+< ./test-files/test.pdf
+--boundary--
+
+###
+
+### Get all documents
+GET {{SmartArchivistApi_HostAddress}}/api/documents
+Accept: application/json
+
+###
+
+### Get document by ID
+GET {{SmartArchivistApi_HostAddress}}/api/documents/{{documentId}}
+Accept: application/json
+
+###
+
+### Download document
+GET {{SmartArchivistApi_HostAddress}}/api/documents/{{documentId}}/download     
+
+###
+
+### Search documents
+GET {{SmartArchivistApi_HostAddress}}/api/documents/search?query=test
+Accept: application/json
+
+###
+
+### Delete document
+DELETE {{SmartArchivistApi_HostAddress}}/api/documents/{{documentId}}

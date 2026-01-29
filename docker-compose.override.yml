@@ -1,0 +1,59 @@
+# Development override file
+# This file is automatically merged with docker-compose.yml when running `docker compose up`
+# It exposes backend ports for development/debugging purposes
+
+services:
+  smartarchivist-rest:
+    ports:
+      - "${SMARTARCHIVIST_REST_PORT}:${ASPNETCORE_HTTP_PORTS}"  # Direct access to REST API for debugging
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=${ASPNETCORE_HTTP_PORTS}
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  postgres:
+    ports:
+      - "5432:5432"  # Database access for DB clients (e.g., pgAdmin, DBeaver)
+
+  adminer:
+    ports:
+      - "9091:8080"  # Direct access to Adminer UI
+
+  rabbitmq:
+    ports:
+      - "5672:5672"   # AMQP protocol port
+      - "9093:15672" # Management UI
+  minio:
+    ports:
+      - "9000:9000"  # MinIO API
+      - "9090:9001"  # MinIO Console UI
+
+  elasticsearch:
+    ports:
+      - "9200:9200" # Elasticsearch API
+
+  kibana:
+    ports:
+      - "9092:5601" # Kibana UI
+
+  smartarchivist-ocr:
+    ports:
+      - "${SMARTARCHIVIST_OCR_PORT}:8082"  # Health check endpoint
+    environment:
+      - ASPNETCORE_HTTP_PORTS=8082
+
+  smartarchivist-genai:
+    ports:
+      - "${SMARTARCHIVIST_GENAI_PORT}:8083"  # Health check endpoint
+    environment:
+      - ASPNETCORE_HTTP_PORTS=8083
+
+  smartarchivist-indexing:
+    ports:
+      - "${SMARTARCHIVIST_INDEXING_PORT}:8084"  # Health check endpoint
+    environment:
+      - ASPNETCORE_HTTP_PORTS=8084

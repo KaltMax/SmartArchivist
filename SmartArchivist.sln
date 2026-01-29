@@ -1,0 +1,114 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11222.15
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartArchivist.Api", "SmartArchivist.Api\SmartArchivist.Api.csproj", "{752798FB-3812-4DCC-901F-E4F7D57707C6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0D3D9DA1-7277-4F1C-A8D2-D55B15414ACD} = {0D3D9DA1-7277-4F1C-A8D2-D55B15414ACD}
+		{2C9106E5-5BD6-4558-99DB-6973901508E0} = {2C9106E5-5BD6-4558-99DB-6973901508E0}
+		{672970AB-79C0-4F7B-8248-76BC4131D51A} = {672970AB-79C0-4F7B-8248-76BC4131D51A}
+		{7C62D63F-E74F-42A6-8922-ACDB72166B95} = {7C62D63F-E74F-42A6-8922-ACDB72166B95}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		.github\workflows\smartarchivist.yaml = .github\workflows\smartarchivist.yaml
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartArchivist.Application", "SmartArchivist.Application\SmartArchivist.Application.csproj", "{7C62D63F-E74F-42A6-8922-ACDB72166B95}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartArchivist.Dal", "SmartArchivist.Dal\SmartArchivist.Dal.csproj", "{0D3D9DA1-7277-4F1C-A8D2-D55B15414ACD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartArchivist.Ocr", "SmartArchivist.Ocr\SmartArchivist.Ocr.csproj", "{2C9106E5-5BD6-4558-99DB-6973901508E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartArchivist.Contract", "SmartArchivist.Contract\SmartArchivist.Contract.csproj", "{672970AB-79C0-4F7B-8248-76BC4131D51A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{36BD09AA-C98A-401A-A902-20B81C745BBC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0D3D9DA1-7277-4F1C-A8D2-D55B15414ACD} = {0D3D9DA1-7277-4F1C-A8D2-D55B15414ACD}
+		{156B034D-3F65-4676-1307-D8F48C7F335C} = {156B034D-3F65-4676-1307-D8F48C7F335C}
+		{2C9106E5-5BD6-4558-99DB-6973901508E0} = {2C9106E5-5BD6-4558-99DB-6973901508E0}
+		{672970AB-79C0-4F7B-8248-76BC4131D51A} = {672970AB-79C0-4F7B-8248-76BC4131D51A}
+		{752798FB-3812-4DCC-901F-E4F7D57707C6} = {752798FB-3812-4DCC-901F-E4F7D57707C6}
+		{7C62D63F-E74F-42A6-8922-ACDB72166B95} = {7C62D63F-E74F-42A6-8922-ACDB72166B95}
+	EndProjectSection
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "SmartArchivist.WebUi", "SmartArchivist.WebUi\SmartArchivist.WebUi.esproj", "{156B034D-3F65-4676-1307-D8F48C7F335C}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{81DDED9D-158B-E303-5F62-77A2896D2A5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartArchivist.GenAi", "SmartArchivist.GenAi\SmartArchivist.GenAi.csproj", "{772BDBCB-1D1C-470B-85A3-527ACD29E460}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartArchivist.Infrastructure", "SmartArchivist.Infrastructure\SmartArchivist.Infrastructure.csproj", "{D66DC04D-1477-4682-A6EA-4701B6B63B9A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartArchivist.Indexing", "SmartArchivist.Indexing\SmartArchivist.Indexing.csproj", "{93E2B2C3-A6B1-41C3-A0D5-DACDC003AFA7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartArchivist.Batch", "SmartArchivist.Batch\SmartArchivist.Batch.csproj", "{D1CAE68B-DEF3-42C1-AF65-D6351F06AF9A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{752798FB-3812-4DCC-901F-E4F7D57707C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{752798FB-3812-4DCC-901F-E4F7D57707C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{752798FB-3812-4DCC-901F-E4F7D57707C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{752798FB-3812-4DCC-901F-E4F7D57707C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C62D63F-E74F-42A6-8922-ACDB72166B95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C62D63F-E74F-42A6-8922-ACDB72166B95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C62D63F-E74F-42A6-8922-ACDB72166B95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C62D63F-E74F-42A6-8922-ACDB72166B95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D3D9DA1-7277-4F1C-A8D2-D55B15414ACD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D3D9DA1-7277-4F1C-A8D2-D55B15414ACD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D3D9DA1-7277-4F1C-A8D2-D55B15414ACD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D3D9DA1-7277-4F1C-A8D2-D55B15414ACD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C9106E5-5BD6-4558-99DB-6973901508E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C9106E5-5BD6-4558-99DB-6973901508E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C9106E5-5BD6-4558-99DB-6973901508E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C9106E5-5BD6-4558-99DB-6973901508E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{672970AB-79C0-4F7B-8248-76BC4131D51A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{672970AB-79C0-4F7B-8248-76BC4131D51A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{672970AB-79C0-4F7B-8248-76BC4131D51A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{672970AB-79C0-4F7B-8248-76BC4131D51A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36BD09AA-C98A-401A-A902-20B81C745BBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36BD09AA-C98A-401A-A902-20B81C745BBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36BD09AA-C98A-401A-A902-20B81C745BBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36BD09AA-C98A-401A-A902-20B81C745BBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{156B034D-3F65-4676-1307-D8F48C7F335C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{156B034D-3F65-4676-1307-D8F48C7F335C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{156B034D-3F65-4676-1307-D8F48C7F335C}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{156B034D-3F65-4676-1307-D8F48C7F335C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{156B034D-3F65-4676-1307-D8F48C7F335C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{156B034D-3F65-4676-1307-D8F48C7F335C}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{772BDBCB-1D1C-470B-85A3-527ACD29E460}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{772BDBCB-1D1C-470B-85A3-527ACD29E460}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{772BDBCB-1D1C-470B-85A3-527ACD29E460}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{772BDBCB-1D1C-470B-85A3-527ACD29E460}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D66DC04D-1477-4682-A6EA-4701B6B63B9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D66DC04D-1477-4682-A6EA-4701B6B63B9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D66DC04D-1477-4682-A6EA-4701B6B63B9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D66DC04D-1477-4682-A6EA-4701B6B63B9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93E2B2C3-A6B1-41C3-A0D5-DACDC003AFA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93E2B2C3-A6B1-41C3-A0D5-DACDC003AFA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93E2B2C3-A6B1-41C3-A0D5-DACDC003AFA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93E2B2C3-A6B1-41C3-A0D5-DACDC003AFA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1CAE68B-DEF3-42C1-AF65-D6351F06AF9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1CAE68B-DEF3-42C1-AF65-D6351F06AF9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1CAE68B-DEF3-42C1-AF65-D6351F06AF9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1CAE68B-DEF3-42C1-AF65-D6351F06AF9A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3541CD50-C96C-458A-95A7-BF566BE0E616}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "SmartArchivist.Ocr": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}

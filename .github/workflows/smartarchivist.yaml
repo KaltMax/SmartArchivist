@@ -1,0 +1,179 @@
+name: SmartArchivist CI
+
+on:
+    push: 
+        branches: [ main, development, 'feature/**' ]
+    pull_request:
+        branches: [ main, development, 'feature/**' ]
+
+jobs:
+    backend-build:
+        runs-on: ubuntu-latest
+
+        steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Setup .NET
+          uses: actions/setup-dotnet@v4
+          with:
+            dotnet-version: '8.0.x'
+
+        - name: Restore dependencies
+          run: dotnet restore SmartArchivist.sln
+
+        - name: Build backend projects
+          run: |
+            dotnet build SmartArchivist.Application/SmartArchivist.Application.csproj --no-restore --configuration Release
+            dotnet build SmartArchivist.Contract/SmartArchivist.Contract.csproj --no-restore --configuration Release
+            dotnet build SmartArchivist.Dal/SmartArchivist.Dal.csproj --no-restore --configuration Release
+            dotnet build SmartArchivist.Ocr/SmartArchivist.Ocr.csproj --no-restore --configuration Release
+            dotnet build SmartArchivist.GenAi/SmartArchivist.GenAi.csproj --no-restore --configuration Release
+            dotnet build SmartArchivist.Infrastructure/SmartArchivist.Infrastructure.csproj --no-restore --configuration Release
+            dotnet build SmartArchivist.Api/SmartArchivist.Api.csproj --no-restore --configuration Release
+            dotnet build Tests/Tests.csproj --no-restore --configuration Release
+
+    backend-test:
+        runs-on: ubuntu-latest
+        needs: backend-build
+
+        steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Setup .NET
+          uses: actions/setup-dotnet@v4
+          with:
+            dotnet-version: '8.0.x'
+
+        - name: Restore dependencies
+          run: dotnet restore SmartArchivist.sln
+
+        - name: Build backend projects
+          run: |
+            dotnet build SmartArchivist.Application/SmartArchivist.Application.csproj --no-restore --configuration Release
+            dotnet build SmartArchivist.Contract/SmartArchivist.Contract.csproj --no-restore --configuration Release
+            dotnet build SmartArchivist.Dal/SmartArchivist.Dal.csproj --no-restore --configuration Release
+            dotnet build SmartArchivist.Ocr/SmartArchivist.Ocr.csproj --no-restore --configuration Release
+            dotnet build SmartArchivist.GenAi/SmartArchivist.GenAi.csproj --no-restore --configuration Release
+            dotnet build SmartArchivist.Infrastructure/SmartArchivist.Infrastructure.csproj --no-restore --configuration Release
+            dotnet build SmartArchivist.Api/SmartArchivist.Api.csproj --no-restore --configuration Release
+            dotnet build Tests/Tests.csproj --no-restore --configuration Release
+
+        - name: Run unit tests
+          run: dotnet test Tests/Tests.csproj --no-build --configuration Release --verbosity normal --filter "FullyQualifiedName!~IntegrationTests" --logger trx --results-directory ./TestResults
+
+        - name: Upload unit test results
+          if: always()
+          uses: actions/upload-artifact@v4
+          with:
+            name: unit-test-results
+            path: ./TestResults
+            retention-days: 7
+
+    integration-tests:
+        runs-on: ubuntu-latest
+        needs: backend-test
+
+        steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Setup .NET
+          uses: actions/setup-dotnet@v4
+          with:
+            dotnet-version: '8.0.x'
+
+        - name: Restore dependencies
+          run: dotnet restore SmartArchivist.sln
+
+        - name: Build solution
+          run: dotnet build SmartArchivist.sln --no-restore --configuration Release
+
+        - name: Run Integration Tests
+          run: dotnet test Tests/Tests.csproj --no-build --configuration Release --filter "FullyQualifiedName~IntegrationTests" --logger trx --results-directory ./TestResults
+          env:
+            TESTCONTAINERS_RYUK_DISABLED: false
+            TESTCONTAINERS_HOST_OVERRIDE: localhost
+
+        - name: Upload Integration Test Results
+          if: always()
+          uses: actions/upload-artifact@v4
+          with:
+            name: integration-test-results
+            path: ./TestResults
+            retention-days: 7
+
+    ui-lint:
+        runs-on: ubuntu-latest
+
+        steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Setup Node.js
+          uses: actions/setup-node@v4
+          with:
+            node-version: '22'
+            cache: 'npm'
+            cache-dependency-path: SmartArchivist.WebUi/package-lock.json
+
+        - name: Install dependencies
+          run: |
+            cd SmartArchivist.WebUi
+            npm ci
+
+        - name: Run linter
+          run: |
+            cd SmartArchivist.WebUi
+            npm run lint
+
+    ui-build:
+        runs-on: ubuntu-latest
+        needs: ui-lint
+
+        steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Setup Node.js
+          uses: actions/setup-node@v4
+          with:
+            node-version: '22'
+            cache: 'npm'
+            cache-dependency-path: SmartArchivist.WebUi/package-lock.json
+
+        - name: Install dependencies
+          run: |
+            cd SmartArchivist.WebUi
+            npm ci
+
+        - name: Build
+          run: |
+            cd SmartArchivist.WebUi
+            npm run build
+
+    ui-test:
+        runs-on: Ubuntu-latest
+        needs: ui-build
+
+        steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Setup Node.js
+          uses: actions/setup-node@v4
+          with:
+            node-version: '22'
+            cache: 'npm'
+            cache-dependency-path: SmartArchivist.WebUi/package-lock.json
+
+        - name: Install dependencies
+          run: |
+            cd SmartArchivist.WebUi
+            npm ci
+
+        - name: Run tests
+          run: |
+            cd SmartArchivist.WebUi
+            npm run test -- --run
