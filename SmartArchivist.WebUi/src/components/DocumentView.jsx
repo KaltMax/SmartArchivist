@@ -259,7 +259,7 @@ function DocumentView() {
           {activeTab === "content" && <ContentTab content={doc.ocrText} />}
         </div>
 
-        <div className="rounded-lg border border-gray-700 bg-[#0B0F14]">
+        <div className="rounded-lg border border-gray-700 bg-[#0B0F14] self-start lg:sticky lg:top-8">
           <PdfViewerPanel doc={doc} showViewer={showViewer} pdfUrl={pdfUrl} />
         </div>
       </div>
