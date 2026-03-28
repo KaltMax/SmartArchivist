@@ -29,8 +29,7 @@ namespace Tests.IntegrationTests.Infrastructure
         public async Task InitializeAsync()
         {
             // Start PostgreSQL container only
-            PostgresContainer = new PostgreSqlBuilder()
-                .WithImage("postgres:15-alpine")
+            PostgresContainer = new PostgreSqlBuilder("postgres:15-alpine")
                 .WithDatabase("smartarchivist_test")
                 .WithUsername("postgres")
                 .WithPassword("test_password")
