@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { initializeAuth } from './api/AuthService';
@@ -11,11 +11,17 @@ import DocumentList from './components/DocumentList';
 import DocumentView from './components/DocumentView';
 
 function App() {
+  const [authReady, setAuthReady] = useState(false);
+
   useEffect(() => {
-    initializeAuth().catch((error) => {
-      console.error('Failed to initialize auth:', error);
-    });
+    initializeAuth()
+      .then(() => setAuthReady(true))
+      .catch((error) => {
+        console.error('Failed to initialize auth:', error);
+      });
   }, []);
+
+  if (!authReady) return null;
 
   return (
     <NotificationProvider>

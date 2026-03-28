@@ -12,12 +12,12 @@ jobs:
 
         steps:
         - name: Checkout code
-          uses: actions/checkout@v4
+          uses: actions/checkout@v6
 
         - name: Setup .NET
-          uses: actions/setup-dotnet@v4
+          uses: actions/setup-dotnet@v5
           with:
-            dotnet-version: '8.0.x'
+            dotnet-version: '10.0.x'
 
         - name: Restore dependencies
           run: dotnet restore SmartArchivist.sln
@@ -39,12 +39,12 @@ jobs:
 
         steps:
         - name: Checkout code
-          uses: actions/checkout@v4
+          uses: actions/checkout@v6
 
         - name: Setup .NET
-          uses: actions/setup-dotnet@v4
+          uses: actions/setup-dotnet@v5
           with:
-            dotnet-version: '8.0.x'
+            dotnet-version: '10.0.x'
 
         - name: Restore dependencies
           run: dotnet restore SmartArchivist.sln
@@ -65,7 +65,7 @@ jobs:
 
         - name: Upload unit test results
           if: always()
-          uses: actions/upload-artifact@v4
+          uses: actions/upload-artifact@v6
           with:
             name: unit-test-results
             path: ./TestResults
@@ -77,12 +77,12 @@ jobs:
 
         steps:
         - name: Checkout code
-          uses: actions/checkout@v4
+          uses: actions/checkout@v6
 
         - name: Setup .NET
-          uses: actions/setup-dotnet@v4
+          uses: actions/setup-dotnet@v5
           with:
-            dotnet-version: '8.0.x'
+            dotnet-version: '10.0.x'
 
         - name: Restore dependencies
           run: dotnet restore SmartArchivist.sln
@@ -98,7 +98,7 @@ jobs:
 
         - name: Upload Integration Test Results
           if: always()
-          uses: actions/upload-artifact@v4
+          uses: actions/upload-artifact@v6
           with:
             name: integration-test-results
             path: ./TestResults
@@ -109,10 +109,10 @@ jobs:
 
         steps:
         - name: Checkout code
-          uses: actions/checkout@v4
+          uses: actions/checkout@v6
 
         - name: Setup Node.js
-          uses: actions/setup-node@v4
+          uses: actions/setup-node@v6
           with:
             node-version: '22'
             cache: 'npm'
@@ -134,10 +134,10 @@ jobs:
 
         steps:
         - name: Checkout code
-          uses: actions/checkout@v4
+          uses: actions/checkout@v6
 
         - name: Setup Node.js
-          uses: actions/setup-node@v4
+          uses: actions/setup-node@v6
           with:
             node-version: '22'
             cache: 'npm'
@@ -159,10 +159,10 @@ jobs:
 
         steps:
         - name: Checkout code
-          uses: actions/checkout@v4
+          uses: actions/checkout@v6
 
         - name: Setup Node.js
-          uses: actions/setup-node@v4
+          uses: actions/setup-node@v6
           with:
             node-version: '22'
             cache: 'npm'
