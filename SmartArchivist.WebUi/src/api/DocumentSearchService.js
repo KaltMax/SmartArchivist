@@ -1,9 +1,8 @@
 import axios from 'axios';
 import { validateDocumentArray } from './Validation';
+import { API_BASE_URL, parseApiError } from './apiClient';
 
-const API_BASE_URL = '/api';
-
-export const searchDocuments = async (query) => {
+export async function searchDocuments(query) {
   if (!query?.trim()) {
     throw new Error('Search query is required');
   }
@@ -12,10 +11,8 @@ export const searchDocuments = async (query) => {
     const res = await axios.get(`${API_BASE_URL}/documents/search`, {
       params: { query },
     });
-
     return validateDocumentArray(res.data);
   } catch (error) {
-    const errorMessage = error.response?.data || error.message;
-    throw new Error(errorMessage);
+    throw parseApiError(error);
   }
-};
+}

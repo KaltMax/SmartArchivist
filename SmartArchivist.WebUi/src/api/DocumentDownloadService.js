@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { validateId } from './Validation';
 import { triggerDownload } from '../utils/triggerDownload';
-
-const API_BASE_URL = '/api';
+import { API_BASE_URL, parseApiError } from './apiClient';
 
 function parseFilenameFromContentDisposition(disposition) {
   if (!disposition) return null;
@@ -40,8 +39,7 @@ export async function downloadDocumentById(id, fallbackName = 'document') {
     triggerDownload(url, filename);
     URL.revokeObjectURL(url);
   } catch (error) {
-    const errorMessage = error.response?.data || error.message;
-    throw new Error(errorMessage);
+    throw parseApiError(error);
   }
 }
 
@@ -56,7 +54,6 @@ export async function createPdfBlobUrl(id) {
     const blob = new Blob([res.data], { type });
     return URL.createObjectURL(blob);
   } catch (error) {
-    const errorMessage = error.response?.data || error.message;
-    throw new Error(errorMessage);
+    throw parseApiError(error);
   }
 }
