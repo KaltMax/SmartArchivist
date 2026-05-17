@@ -5,6 +5,7 @@ import { getDocumentById } from '../api/DocumentGetByIdService';
 import { deleteDocument } from '../api/DocumentDeleteService';
 import { downloadDocumentById, createPdfBlobUrl } from '../api/DocumentDownloadService';
 import { updateDocument } from '../api/DocumentUpdateService';
+import { useEditableField } from '../hooks/useEditableField';
 import DeleteConfirmModal from './DeleteConfirmModal';
 import DocumentHeader from './DocumentHeader';
 import DocumentActions from './DocumentActions';
@@ -12,6 +13,11 @@ import SummaryTab from './SummaryTab';
 import ContentTab from './ContentTab';
 import MetadataTab from './MetadataTab';
 import PdfViewerPanel from './PdfViewerPanel';
+
+const tabClassName = (active) =>
+  `px-3 py-2 text-sm ${
+    active ? 'text-white border-b-2 border-emerald-500' : 'text-gray-400 hover:text-gray-200'
+  }`;
 
 function DocumentView() {
   const { id } = useParams();
@@ -23,12 +29,24 @@ function DocumentView() {
   const [pdfUrl, setPdfUrl] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  // Edit state
-  const [isEditingName, setIsEditingName] = useState(false);
-  const [isEditingSummary, setIsEditingSummary] = useState(false);
-  const [editedName, setEditedName] = useState('');
-  const [editedSummary, setEditedSummary] = useState('');
-  const [isSaving, setIsSaving] = useState(false);
+  const nameField = useEditableField({
+    onSave: async (value) => {
+      const updated = await updateDocument(doc.id, value, null);
+      setDoc(updated);
+    },
+    validate: (value) => (value.trim() ? null : 'Name cannot be empty'),
+    successMessage: 'Document name updated successfully',
+    errorMessage: 'Failed to update document name',
+  });
+
+  const summaryField = useEditableField({
+    onSave: async (value) => {
+      const updated = await updateDocument(doc.id, null, value);
+      setDoc(updated);
+    },
+    successMessage: 'Summary updated successfully',
+    errorMessage: 'Failed to update summary',
+  });
 
   useEffect(() => {
     (async () => {
@@ -61,26 +79,6 @@ function DocumentView() {
   }
 
   const isPdf = doc.fileExtension.toLowerCase() === '.pdf';
-
-  // Tab-Classes
-  let summaryTabClass = 'px-3 py-2 text-sm ';
-  if (activeTab === 'summary') {
-    summaryTabClass += 'text-white border-b-2 border-emerald-500';
-  } else {
-    summaryTabClass += 'text-gray-400 hover:text-gray-200';
-  }
-  let metadataTabClass = 'px-3 py-2 text-sm ';
-  if (activeTab === 'metadata') {
-    metadataTabClass += 'text-white border-b-2 border-emerald-500';
-  } else {
-    metadataTabClass += 'text-gray-400 hover:text-gray-200';
-  }
-  let contentTabClass = 'px-3 py-2 text-sm ';
-  if (activeTab === 'content') {
-    contentTabClass += 'text-white border-b-2 border-emerald-500';
-  } else {
-    contentTabClass += 'text-gray-400 hover:text-gray-200';
-  }
 
   const handleOpenViewer = async () => {
     if (!isPdf) return;
@@ -136,72 +134,17 @@ function DocumentView() {
     setShowDeleteModal(false);
   };
 
-  const handleStartEditName = () => {
-    setEditedName(doc.name);
-    setIsEditingName(true);
-  };
-
-  const handleStartEditSummary = () => {
-    setEditedSummary(doc.genAiSummary || '');
-    setIsEditingSummary(true);
-  };
-
-  const handleSaveName = async () => {
-    if (!editedName.trim()) {
-      toast.error('Name cannot be empty');
-      return;
-    }
-
-    setIsSaving(true);
-    try {
-      const updatedDoc = await updateDocument(doc.id, editedName, null);
-      setDoc(updatedDoc);
-      setIsEditingName(false);
-      toast.success('Document name updated successfully');
-    } catch (error) {
-      console.error('Failed to update name:', error);
-      toast.error(error.message || 'Failed to update document name');
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const handleSaveSummary = async () => {
-    setIsSaving(true);
-    try {
-      const updatedDoc = await updateDocument(doc.id, null, editedSummary);
-      setDoc(updatedDoc);
-      setIsEditingSummary(false);
-      toast.success('Summary updated successfully');
-    } catch (error) {
-      console.error('Failed to update summary:', error);
-      toast.error(error.message || 'Failed to update summary');
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const handleCancelEditName = () => {
-    setIsEditingName(false);
-    setEditedName('');
-  };
-
-  const handleCancelEditSummary = () => {
-    setIsEditingSummary(false);
-    setEditedSummary('');
-  };
-
   return (
     <div className="flex flex-col gap-6">
       <DocumentHeader
         doc={doc}
-        isEditingName={isEditingName}
-        editedName={editedName}
-        isSaving={isSaving}
-        onStartEditName={handleStartEditName}
-        onSaveName={handleSaveName}
-        onCancelEditName={handleCancelEditName}
-        onNameChange={setEditedName}
+        isEditingName={nameField.isEditing}
+        editedName={nameField.editedValue}
+        isSaving={nameField.isSaving}
+        onStartEditName={() => nameField.startEdit(doc.name)}
+        onSaveName={nameField.save}
+        onCancelEditName={nameField.cancel}
+        onNameChange={nameField.setEditedValue}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-[640px_1fr] gap-6">
@@ -217,7 +160,7 @@ function DocumentView() {
             <button
               type="button"
               onClick={() => setActiveTab('summary')}
-              className={summaryTabClass}
+              className={tabClassName(activeTab === 'summary')}
               aria-current={activeTab === 'summary'}
             >
               Summary
@@ -225,7 +168,7 @@ function DocumentView() {
             <button
               type="button"
               onClick={() => setActiveTab('content')}
-              className={contentTabClass}
+              className={tabClassName(activeTab === 'content')}
               aria-current={activeTab === 'content'}
             >
               Content
@@ -233,7 +176,7 @@ function DocumentView() {
             <button
               type="button"
               onClick={() => setActiveTab('metadata')}
-              className={metadataTabClass}
+              className={tabClassName(activeTab === 'metadata')}
               aria-current={activeTab === 'metadata'}
             >
               Metadata
@@ -246,13 +189,13 @@ function DocumentView() {
             <SummaryTab
               summary={doc.genAiSummary}
               documentState={doc.state}
-              isEditing={isEditingSummary}
-              editedSummary={editedSummary}
-              isSaving={isSaving}
-              onStartEdit={handleStartEditSummary}
-              onSave={handleSaveSummary}
-              onCancel={handleCancelEditSummary}
-              onSummaryChange={setEditedSummary}
+              isEditing={summaryField.isEditing}
+              editedSummary={summaryField.editedValue}
+              isSaving={summaryField.isSaving}
+              onStartEdit={() => summaryField.startEdit(doc.genAiSummary || '')}
+              onSave={summaryField.save}
+              onCancel={summaryField.cancel}
+              onSummaryChange={summaryField.setEditedValue}
             />
           )}
 
