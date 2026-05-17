@@ -29,19 +29,18 @@ axios.interceptors.response.use(
     const status = error.response?.status;
 
     if (status !== 401 || !original || original._retry || original.url === TOKEN_URL) {
-      return Promise.reject(error);
+      throw error;
     }
 
     original._retry = true;
-    try {
-      const newToken = await (refreshPromise ??= refreshToken().finally(() => {
+    if (!refreshPromise) {
+      refreshPromise = refreshToken().finally(() => {
         refreshPromise = null;
-      }));
-      original.headers.Authorization = `Bearer ${newToken}`;
-      return axios(original);
-    } catch (refreshError) {
-      return Promise.reject(refreshError);
+      });
     }
+    const newToken = await refreshPromise;
+    original.headers.Authorization = `Bearer ${newToken}`;
+    return axios(original);
   }
 );
 

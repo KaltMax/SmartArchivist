@@ -44,7 +44,7 @@ export const validateId = (id) => {
 
 export const validateDocumentDto = (doc) => {
   if (!doc || typeof doc !== 'object') {
-    throw new Error('Invalid document data received');
+    throw new TypeError('Invalid document data received');
   }
 
   const requiredFields = [
@@ -67,7 +67,7 @@ export const validateDocumentDto = (doc) => {
 
 export const validateDocumentArray = (docs) => {
   if (!Array.isArray(docs)) {
-    throw new Error('Expected an array of documents');
+    throw new TypeError('Expected an array of documents');
   }
   return docs.map(validateDocumentDto);
 };

@@ -35,14 +35,14 @@ export async function downloadDocumentById(id, fallbackName = 'document') {
       type: res.headers?.['content-type'] || 'application/octet-stream',
     });
 
-    const url = window.URL.createObjectURL(blob);
+    const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = filename;
     document.body.appendChild(a);
     a.click();
     a.remove();
-    window.URL.revokeObjectURL(url);
+    URL.revokeObjectURL(url);
   } catch (error) {
     const errorMessage = error.response?.data || error.message;
     throw new Error(errorMessage);
@@ -58,7 +58,7 @@ export async function createPdfBlobUrl(id) {
     });
     const type = res.headers?.['content-type'] || 'application/pdf';
     const blob = new Blob([res.data], { type });
-    return window.URL.createObjectURL(blob);
+    return URL.createObjectURL(blob);
   } catch (error) {
     const errorMessage = error.response?.data || error.message;
     throw new Error(errorMessage);
