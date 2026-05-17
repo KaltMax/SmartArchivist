@@ -13,8 +13,8 @@ A Document management system for archiving documents in a FileStore, with automa
 **Note:** Node.js and .NET SDK are NOT required on your host machine when using Docker, as all building happens inside containers.
 
 ## For Local Development
-- Node.js v18 or higher (includes npm for building the React frontend)
-- .NET 8.0 SDK (for building the backend services)
+- Node.js v22 or higher (includes npm for building the React frontend)
+- .NET 10 SDK (for building the backend services)
 
 # Getting Started
 
@@ -178,6 +178,7 @@ The application uses four RabbitMQ queues for async processing:
 | `smartarchivist.document.result` | SmartArchivist.Indexing (IndexingWorker) | SmartArchivist.Api (DocumentResultWorker) | `IndexingCompletedMessage` | Marks document as Completed and notifies WebUI |
 
 ### Queue Configuration
+
 - All queues are durable (survive broker restarts)
 - Manual acknowledgment with message requeue on failure
 - QoS prefetch count = 1 (fair distribution across consumers)
@@ -295,6 +296,11 @@ ASP.NET Core Web API project providing RESTful endpoints for document management
 - `DELETE /api/documents/{id}`: Delete a specific document by ID
 - `GET /api/documents/{id}/download`: Download the original document file
 - `GET /api/documents/search?q={query}`: Search documents by text query
+- `POST /api/auth/token`: Issue a JWT (1-hour expiry) for REST and SignalR auth
+
+### Authentication
+
+JWT bearer auth protects all REST endpoints and the SignalR hub. Tokens expire after 1 hour. The WebUI stores the token in `localStorage` and refreshes it transparently on a 401 response or when SignalR fails to reconnect with an expired token. SignalR receives the token via the `access_token` query string parameter, since WebSockets cannot send `Authorization` headers.
 
 ### Background Workers
 
@@ -521,11 +527,13 @@ Test suite using **xUnit** as testing framework and **NSubstitute** for mocking 
 ## Jobs
 
 ### Backend
+
 - Build backend projects (SmartArchivist.Api, SmartArchivist.Application, SmartArchivist.Dal, SmartArchivist.Ocr, SmartArchivist.GenAi, SmartArchivist.Indexing, SmartArchivist.Infrastructure, SmartArchivist.Contract)
 - Run backend unit tests
 - Run backend integration tests
 
 ### SmartArchivist.WebUi
+
 - Lint React code using ESLint
 - Build React application
 - Run unit tests for WebUI

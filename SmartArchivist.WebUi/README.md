@@ -31,12 +31,12 @@ The app connects to the backend via nginx reverse proxy:
 - **REST API**: `/api` - HTTP requests for document management
 - **SignalR Hub**: `/hubs/documents` - WebSocket connection for real-time notifications
 
-Authentication uses JWT tokens managed by `AuthService`.
+Authentication uses JWT tokens managed by `AuthService`. Tokens are cached in `localStorage` and refreshed transparently on a 401 response. `NotificationProvider` rebuilds the SignalR connection with a fresh token if it drops with an expired one.
 
 ## Getting Started
 
 ### Prerequisites
-- Node.js (recommended: v18+)
+- Node.js (recommended: v22+)
 
 ### Install Dependencies
 ```bash

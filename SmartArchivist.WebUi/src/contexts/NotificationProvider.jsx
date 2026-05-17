@@ -3,86 +3,94 @@ import PropTypes from 'prop-types';
 import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
 import { toast } from 'react-toastify';
 import { NotificationContext } from './NotificationContext';
-import { getToken } from '../api/AuthService';
+import { getToken, refreshToken } from '../api/AuthService';
 
-// Provider component that establishes SignalR connection and provides notification functions
+function registerNotificationHandlers(connection) {
+    connection.on('DocumentProcessingCompleted', (data) => {
+        const documentName = data.fileName || 'Unknown document';
+        toast.success(`OCR, GenAI and Indexing Processing completed for "${documentName}"!`);
+    });
+
+    connection.on('DocumentProcessingFailed', (data) => {
+        const documentName = data.fileName || 'Unknown document';
+        const stage = data.stage || 'processing';
+        toast.error(
+            `Processing failed for "${documentName}" at ${stage} stage. ` +
+            `Document has been removed. Please upload again.`,
+            { autoClose: 8000 }
+        );
+    });
+}
+
 export function NotificationProvider({ children }) {
     const connectionRef = useRef(null);
 
     useEffect(() => {
-        // Get JWT token for authentication
-        const token = getToken();
-
-        if (!token) {
-            console.error('No JWT token available for SignalR connection');
+        if (!getToken()) {
             toast.error('Authentication required for real-time notifications');
             return;
         }
 
-        // Build SignalR connection with JWT token in query string
-        // WebSocket connections cannot send Authorization headers, so we use query string
-        const connection = new HubConnectionBuilder()
-            .withUrl('/hubs/documents', {
-                accessTokenFactory: () => token,
-                withCredentials: true
-            })
-            .withAutomaticReconnect()
-            .configureLogging(LogLevel.Warning)
-            .build();
+        let cancelled = false;
 
-        // Set up event listeners
-        connection.on('DocumentProcessingCompleted', (data) => {
-            console.log('Document processing completed:', data);
-            const documentName = data.fileName || 'Unknown document';
-            toast.success(`OCR, GenAI and Indexing Processing completed for "${documentName}"!`);
-        });
+        // Build, start, and self-heal the SignalR connection.
+        // - Stale token at startup: start() fails, we refresh and retry.
+        // - Token expires mid-session: auto-reconnect exhausts, onclose fires,
+        //   we recursively call connect() which goes through the same path.
+        const connect = async () => {
+            if (cancelled) return;
 
-        connection.on('DocumentProcessingFailed', (data) => {
-            console.error('Document processing failed:', data);
-            const documentName = data.fileName || 'Unknown document';
-            const stage = data.stage || 'processing';
+            const connection = new HubConnectionBuilder()
+                .withUrl('/hubs/documents', {
+                    accessTokenFactory: () => getToken(),
+                    withCredentials: true
+                })
+                .withAutomaticReconnect()
+                .configureLogging(LogLevel.Warning)
+                .build();
 
-            // This notification fires when retries are exhausted and document is deleted
-            toast.error(
-                `Processing failed for "${documentName}" at ${stage} stage. ` +
-                `Document has been removed. Please upload again.`,
-                { autoClose: 8000 }
-            );
-        });
+            registerNotificationHandlers(connection);
 
-        // Start the connection
-        connection.start()
-            .then(() => {
-                console.log('SignalR connected successfully');
-            })
-            .catch((error) => {
-                console.error('SignalR connection error:', error);
-                toast.error('Failed to connect to notification service');
+            // A graceful stop() passes no error; only react to real failures.
+            connection.onclose((error) => {
+                if (error && !cancelled) connect();
             });
 
-        // Store connection reference
-        connectionRef.current = connection;
-
-        // Cleanup on unmount
-        return () => {
-            if (connectionRef.current) {
-                connectionRef.current.stop()
-                    .then(() => console.log('SignalR disconnected'))
-                    .catch((error) => console.error('Error disconnecting:', error));
+            try {
+                await connection.start();
+            } catch {
+                if (cancelled) return;
+                await refreshToken();
+                if (cancelled) return;
+                await connection.start();
             }
+
+            if (cancelled) {
+                connection.stop().catch(() => {});
+                return;
+            }
+            connectionRef.current = connection;
+        };
+
+        connect().catch((error) => {
+            console.error('SignalR connection error:', error);
+            toast.error('Failed to connect to notification service');
+        });
+
+        return () => {
+            cancelled = true;
+            connectionRef.current?.stop().catch(() => {});
+            connectionRef.current = null;
         };
     }, []);
 
-    // Subscribe to updates for a specific document
     const subscribeToDocument = useCallback(async (documentId) => {
         if (!connectionRef.current) {
             console.error('SignalR connection not established yet');
             return;
         }
-
         try {
             await connectionRef.current.invoke('SubscribeToDocument', documentId.toString());
-            console.log(`Subscribed to document: ${documentId}`);
         } catch (error) {
             console.error('Error subscribing to document:', error);
         }

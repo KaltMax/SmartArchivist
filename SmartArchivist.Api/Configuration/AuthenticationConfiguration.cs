@@ -21,7 +21,8 @@ namespace SmartArchivist.Api.Configuration
                     {
                         ValidateIssuer = true,
                         ValidateAudience = true,
-                        ValidateLifetime = false, // Should be set true when using an expiration date
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.FromSeconds(30),
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = configuration["Jwt:Issuer"],
                         ValidAudience = configuration["Jwt:Audience"],

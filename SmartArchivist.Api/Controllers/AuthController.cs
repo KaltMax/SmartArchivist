@@ -62,7 +62,7 @@ namespace SmartArchivist.Api.Controllers
                 issuer: _configuration["Jwt:Issuer"], // Who created the token
                 audience: _configuration["Jwt:Audience"], // Who should accept the token
                 claims: claims,
-                expires: null, // Token never expires -> valid until the server restarts
+                expires: DateTime.UtcNow.AddHours(1),
                 signingCredentials: credentials
             );
 

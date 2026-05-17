@@ -2,20 +2,47 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 const API_BASE_URL = '/api';
+const TOKEN_URL = `${API_BASE_URL}/auth/token`;
 
 let token = null;
+let refreshPromise = null;
 
 // Add Authorization header to all requests except for the token fetch request
 // Interceptor = function that is called before a request is sent or after a response is received
 axios.interceptors.request.use(
   (config) => {
     const token = getToken();
-    if (token && config.url !== `${API_BASE_URL}/auth/token`) {
+    if (token && config.url !== TOKEN_URL) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
   (error) => Promise.reject(error)
+);
+
+// On 401, refresh the token once and retry the original request.
+// Concurrent 401s share a single refresh via refreshPromise.
+axios.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const original = error.config;
+    const status = error.response?.status;
+
+    if (status !== 401 || !original || original._retry || original.url === TOKEN_URL) {
+      return Promise.reject(error);
+    }
+
+    original._retry = true;
+    try {
+      const newToken = await (refreshPromise ??= refreshToken().finally(() => {
+        refreshPromise = null;
+      }));
+      original.headers.Authorization = `Bearer ${newToken}`;
+      return axios(original);
+    } catch (refreshError) {
+      return Promise.reject(refreshError);
+    }
+  }
 );
 
 export const fetchToken = async () => {
