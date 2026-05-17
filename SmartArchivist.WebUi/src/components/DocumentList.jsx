@@ -1,10 +1,9 @@
 import { useEffect, useState, useMemo, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { getAllDocuments } from '../api/DocumentGetService';
-import { formatBytes } from '../utils/formatBytes';
-import { formatDocumentState } from '../utils/formatDocumentState';
-import { getStateColor } from '../utils/getStateColor';
+import { usePersistedState } from '../hooks/usePersistedState';
+import { useClickOutside } from '../hooks/useClickOutside';
+import DocumentCard from './DocumentCard';
 import {
   ArrowsUpDownIcon,
   XMarkIcon,
@@ -21,40 +20,19 @@ function DocumentList() {
   const sortDropdownRef = useRef(null);
   const displayDropdownRef = useRef(null);
 
-  // Separate state for sorting and display - load from localStorage if available
-  const [sortConfig, setSortConfig] = useState(() => {
-    const saved = localStorage.getItem('documentList.sortConfig');
-    return saved
-      ? JSON.parse(saved)
-      : {
-          sortBy: 'uploadDate',
-          sortOrder: 'desc',
-        };
+  const [sortConfig, setSortConfig] = usePersistedState('documentList.sortConfig', {
+    sortBy: 'uploadDate',
+    sortOrder: 'desc',
   });
 
-  const [displayConfig, setDisplayConfig] = useState(() => {
-    const saved = localStorage.getItem('documentList.displayConfig');
-    return saved
-      ? JSON.parse(saved)
-      : {
-          state: true,
-          uploadDate: true,
-          fileSize: true,
-          fileExtension: false,
-          contentType: false,
-          tags: true,
-        };
+  const [displayConfig, setDisplayConfig] = usePersistedState('documentList.displayConfig', {
+    state: true,
+    uploadDate: true,
+    fileSize: true,
+    fileExtension: false,
+    contentType: false,
+    tags: true,
   });
-
-  // Save sortConfig to localStorage whenever it changes
-  useEffect(() => {
-    localStorage.setItem('documentList.sortConfig', JSON.stringify(sortConfig));
-  }, [sortConfig]);
-
-  // Save displayConfig to localStorage whenever it changes
-  useEffect(() => {
-    localStorage.setItem('documentList.displayConfig', JSON.stringify(displayConfig));
-  }, [displayConfig]);
 
   useEffect(() => {
     (async () => {
@@ -71,20 +49,8 @@ function DocumentList() {
     })();
   }, []);
 
-  // Close dropdowns when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (sortDropdownRef.current && !sortDropdownRef.current.contains(event.target)) {
-        setShowSortDropdown(false);
-      }
-      if (displayDropdownRef.current && !displayDropdownRef.current.contains(event.target)) {
-        setShowDisplayDropdown(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  useClickOutside(sortDropdownRef, () => setShowSortDropdown(false));
+  useClickOutside(displayDropdownRef, () => setShowDisplayDropdown(false));
 
   // Apply sorting
   const sortedDocs = useMemo(() => {
@@ -171,58 +137,7 @@ function DocumentList() {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         {sortedDocs.map((d) => (
-          <Link
-            key={d.id}
-            to={`/documents/${d.id}`}
-            className="block rounded-lg border border-gray-700 bg-[#0B0F14] p-4 shadow hover:border-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500"
-            title={d.name}
-            aria-label={`Open ${d.name}`}
-          >
-            <div className="text-white text-sm font-medium truncate">{d.name}</div>
-
-            {displayConfig.state && (
-              <div className="mt-1">
-                <span
-                  className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getStateColor(
-                    d.state
-                  )}`}
-                >
-                  {formatDocumentState(d.state)}
-                </span>
-              </div>
-            )}
-
-            {displayConfig.uploadDate && (
-              <div className="mt-1 text-xs text-gray-400">
-                Uploaded at: {new Date(d.uploadDate).toLocaleDateString()}
-              </div>
-            )}
-
-            {displayConfig.fileSize && (
-              <div className="mt-1 text-xs text-gray-400">Size: {formatBytes(d.fileSize)}</div>
-            )}
-
-            {displayConfig.fileExtension && (
-              <div className="mt-1 text-xs text-gray-400">File Type: {d.fileExtension}</div>
-            )}
-
-            {displayConfig.contentType && (
-              <div className="mt-1 text-xs text-gray-400">Content Type: {d.contentType}</div>
-            )}
-
-            {displayConfig.tags && d.tags && d.tags.length > 0 && (
-              <div className="mt-2 flex flex-wrap gap-1">
-                {d.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="inline-block px-1.5 py-0.5 text-xs rounded bg-emerald-600/20 text-emerald-400"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
-          </Link>
+          <DocumentCard key={d.id} doc={d} displayConfig={displayConfig} />
         ))}
       </div>
     );

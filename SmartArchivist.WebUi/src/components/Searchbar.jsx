@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { toast } from 'react-toastify';
 import { searchDocuments } from '../api/DocumentSearchService';
+import { useClickOutside } from '../hooks/useClickOutside';
 
 function Searchbar({ debounceMs = 400, onResults }) {
   const [query, setQuery] = useState('');
@@ -14,13 +15,7 @@ function Searchbar({ debounceMs = 400, onResults }) {
   const containerRef = useRef(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const onDocClick = (e) => {
-      if (!containerRef.current?.contains(e.target)) setOpen(false);
-    };
-    document.addEventListener('mousedown', onDocClick);
-    return () => document.removeEventListener('mousedown', onDocClick);
-  }, []);
+  useClickOutside(containerRef, () => setOpen(false));
 
   useEffect(() => {
     const q = query.trim();
