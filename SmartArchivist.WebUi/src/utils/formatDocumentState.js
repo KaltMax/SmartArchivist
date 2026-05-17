@@ -10,7 +10,7 @@ export const DocumentState = {
 
 // Converts a DocumentState value to a readable string
 export function formatDocumentState(state) {
-  const stateValue = typeof state === 'string' ? parseInt(state, 10) : state;
+  const stateValue = typeof state === 'string' ? Number.parseInt(state, 10) : state;
 
   switch (stateValue) {
     case DocumentState.Uploaded:

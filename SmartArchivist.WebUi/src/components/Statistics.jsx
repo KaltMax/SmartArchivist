@@ -72,7 +72,7 @@ function Statistics({ refreshTrigger }) {
   );
 }
 
-Statistics.protoTypes = {
+Statistics.propTypes = {
   refreshTrigger: PropTypes.number.isRequired,
 };
 

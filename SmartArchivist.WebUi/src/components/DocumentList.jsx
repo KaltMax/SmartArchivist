@@ -112,8 +112,6 @@ function DocumentList() {
         case 'contentType':
           comparison = a.contentType.localeCompare(b.contentType);
           break;
-        default:
-          comparison = 0;
       }
 
       return sortConfig.sortOrder === 'asc' ? comparison : -comparison;
@@ -196,12 +194,12 @@ function DocumentList() {
 
             {displayConfig.uploadDate && (
               <div className="mt-1 text-xs text-gray-400">
-                Uploaded {new Date(d.uploadDate).toLocaleDateString()}
+                Uploaded at: {new Date(d.uploadDate).toLocaleDateString()}
               </div>
             )}
 
             {displayConfig.fileSize && (
-              <div className="mt-1 text-xs text-gray-400">{formatBytes(d.fileSize)}</div>
+              <div className="mt-1 text-xs text-gray-400">Size: {formatBytes(d.fileSize)}</div>
             )}
 
             {displayConfig.fileExtension && (

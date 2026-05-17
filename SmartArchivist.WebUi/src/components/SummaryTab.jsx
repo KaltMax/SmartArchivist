@@ -18,27 +18,7 @@ function SummaryTab({
 
   return (
     <div>
-      {!isEditing ? (
-        <>
-          {canEdit && (
-            <div className="flex justify-end items-center mb-3">
-              <button
-                type="button"
-                onClick={onStartEdit}
-                className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-md bg-gray-700 text-gray-200 hover:bg-gray-600 transition-colors"
-              >
-                <PencilIcon className="w-3.5 h-3.5" />
-                Edit
-              </button>
-            </div>
-          )}
-          <div className="text-sm text-gray-200 whitespace-pre-wrap break-words">
-            {summary || (
-              <span className="text-gray-400 italic">Summary will appear here later.</span>
-            )}
-          </div>
-        </>
-      ) : (
+      {isEditing ? (
         <>
           <div className="flex justify-between items-center mb-2">
             <span className="text-xs text-gray-400">Editing Summary</span>
@@ -69,6 +49,26 @@ function SummaryTab({
               <XMarkIcon className="w-4 h-4" />
               Cancel
             </button>
+          </div>
+        </>
+      ) : (
+        <>
+          {canEdit && (
+            <div className="flex justify-end items-center mb-3">
+              <button
+                type="button"
+                onClick={onStartEdit}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-md bg-gray-700 text-gray-200 hover:bg-gray-600 transition-colors"
+              >
+                <PencilIcon className="w-3.5 h-3.5" />
+                Edit
+              </button>
+            </div>
+          )}
+          <div className="text-sm text-gray-200 whitespace-pre-wrap break-words">
+            {summary || (
+              <span className="text-gray-400 italic">Summary will appear here later.</span>
+            )}
           </div>
         </>
       )}

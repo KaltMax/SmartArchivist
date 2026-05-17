@@ -11,7 +11,7 @@ function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
-    const mql = window.matchMedia('(min-width: 768px)');
+    const mql = matchMedia('(min-width: 768px)');
     const apply = () => setCollapsed(!mql.matches);
     apply();
 

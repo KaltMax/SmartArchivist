@@ -18,21 +18,7 @@ function DocumentHeader({
 
   return (
     <div className="flex flex-col gap-3">
-      {!isEditingName ? (
-        <div className="flex items-center gap-2">
-          <h1 className="text-2xl font-semibold text-white truncate">{doc.name}</h1>
-          {canEdit && (
-            <button
-              type="button"
-              onClick={onStartEditName}
-              className="text-gray-400 hover:text-white transition-colors"
-              title="Edit name"
-            >
-              <PencilIcon className="w-5 h-5" />
-            </button>
-          )}
-        </div>
-      ) : (
+      {isEditingName ? (
         <div className="flex items-center gap-2">
           <input
             type="text"
@@ -60,6 +46,20 @@ function DocumentHeader({
           >
             <XMarkIcon className="w-5 h-5" />
           </button>
+        </div>
+      ) : (
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-semibold text-white truncate">{doc.name}</h1>
+          {canEdit && (
+            <button
+              type="button"
+              onClick={onStartEditName}
+              className="text-gray-400 hover:text-white transition-colors"
+              title="Edit name"
+            >
+              <PencilIcon className="w-5 h-5" />
+            </button>
+          )}
         </div>
       )}
 
