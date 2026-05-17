@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { validateId } from './Validation';
+import { triggerDownload } from '../utils/triggerDownload';
 
 const API_BASE_URL = '/api';
 
@@ -36,12 +37,7 @@ export async function downloadDocumentById(id, fallbackName = 'document') {
     });
 
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
+    triggerDownload(url, filename);
     URL.revokeObjectURL(url);
   } catch (error) {
     const errorMessage = error.response?.data || error.message;

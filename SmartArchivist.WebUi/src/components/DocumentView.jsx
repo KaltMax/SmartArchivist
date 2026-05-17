@@ -6,6 +6,7 @@ import { deleteDocument } from '../api/DocumentDeleteService';
 import { downloadDocumentById, createPdfBlobUrl } from '../api/DocumentDownloadService';
 import { updateDocument } from '../api/DocumentUpdateService';
 import { useEditableField } from '../hooks/useEditableField';
+import { triggerDownload } from '../utils/triggerDownload';
 import DeleteConfirmModal from './DeleteConfirmModal';
 import DocumentHeader from './DocumentHeader';
 import DocumentActions from './DocumentActions';
@@ -63,12 +64,10 @@ function DocumentView() {
     })();
   }, [id]);
 
+  // Revoke the blob URL when it's replaced or the component unmounts.
   useEffect(() => {
-    return () => {
-      if (pdfUrl) {
-        URL.revokeObjectURL(pdfUrl);
-      }
-    };
+    if (!pdfUrl) return undefined;
+    return () => URL.revokeObjectURL(pdfUrl);
   }, [pdfUrl]);
 
   if (loading) {
@@ -83,7 +82,7 @@ function DocumentView() {
   const handleOpenViewer = async () => {
     if (!isPdf) return;
     try {
-      if (pdfUrl) URL.revokeObjectURL(pdfUrl);
+      // Setting pdfUrl triggers the useEffect cleanup that revokes the previous URL.
       const url = await createPdfBlobUrl(doc.id);
       setPdfUrl(url);
       setShowViewer(true);
@@ -96,17 +95,11 @@ function DocumentView() {
   const handleDownload = async () => {
     const filename = doc.name + doc.fileExtension;
     try {
-      // when pdf is already loaded in viewer, download directly from blob URL
+      // If the PDF is already loaded in the viewer, reuse its blob URL.
       if (isPdf && pdfUrl) {
-        const a = document.createElement('a');
-        a.href = pdfUrl;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
+        triggerDownload(pdfUrl, filename);
         return;
       }
-      // Fallback: normal api download
       await downloadDocumentById(doc.id, filename);
     } catch (error) {
       console.error('Download failed:', error);
