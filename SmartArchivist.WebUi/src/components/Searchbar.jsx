@@ -47,7 +47,7 @@ function Searchbar({ debounceMs = 400, onResults }) {
         if (id === requestIdRef.current) {
           setItems([]);
           onResults?.([]);
-          toast.error(error.message ||'Failed to search documents');
+          toast.error(error.message || 'Failed to search documents');
         }
       } finally {
         if (id === requestIdRef.current) setLoading(false);
@@ -135,4 +135,4 @@ Searchbar.propTypes = {
   onResults: PropTypes.func,
 };
 
-export default Searchbar
+export default Searchbar;

@@ -1,24 +1,24 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
-import { getDocumentById } from "../api/DocumentGetByIdService";
-import { deleteDocument } from "../api/DocumentDeleteService";
-import { downloadDocumentById, createPdfBlobUrl } from "../api/DocumentDownloadService";
-import { updateDocument } from "../api/DocumentUpdateService";
-import DeleteConfirmModal from "./DeleteConfirmModal";
-import DocumentHeader from "./DocumentHeader";
-import DocumentActions from "./DocumentActions";
-import SummaryTab from "./SummaryTab";
-import ContentTab from "./ContentTab";
-import MetadataTab from "./MetadataTab";
-import PdfViewerPanel from "./PdfViewerPanel";
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { getDocumentById } from '../api/DocumentGetByIdService';
+import { deleteDocument } from '../api/DocumentDeleteService';
+import { downloadDocumentById, createPdfBlobUrl } from '../api/DocumentDownloadService';
+import { updateDocument } from '../api/DocumentUpdateService';
+import DeleteConfirmModal from './DeleteConfirmModal';
+import DocumentHeader from './DocumentHeader';
+import DocumentActions from './DocumentActions';
+import SummaryTab from './SummaryTab';
+import ContentTab from './ContentTab';
+import MetadataTab from './MetadataTab';
+import PdfViewerPanel from './PdfViewerPanel';
 
 function DocumentView() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [doc, setDoc] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState("summary");
+  const [activeTab, setActiveTab] = useState('summary');
   const [showViewer, setShowViewer] = useState(false);
   const [pdfUrl, setPdfUrl] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -26,8 +26,8 @@ function DocumentView() {
   // Edit state
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingSummary, setIsEditingSummary] = useState(false);
-  const [editedName, setEditedName] = useState("");
-  const [editedSummary, setEditedSummary] = useState("");
+  const [editedName, setEditedName] = useState('');
+  const [editedSummary, setEditedSummary] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
@@ -37,8 +37,8 @@ function DocumentView() {
         const data = await getDocumentById(id);
         setDoc(data);
       } catch (error) {
-        console.error("Failed to load document:", error);
-        toast.error(error.message ||"Failed to load document");
+        console.error('Failed to load document:', error);
+        toast.error(error.message || 'Failed to load document');
       } finally {
         setLoading(false);
       }
@@ -60,26 +60,26 @@ function DocumentView() {
     return <div className="text-gray-400">Document not found.</div>;
   }
 
-  const isPdf = doc.fileExtension.toLowerCase() === ".pdf";
+  const isPdf = doc.fileExtension.toLowerCase() === '.pdf';
 
   // Tab-Classes
-  let summaryTabClass = "px-3 py-2 text-sm ";
-  if (activeTab === "summary") {
-    summaryTabClass += "text-white border-b-2 border-emerald-500";
+  let summaryTabClass = 'px-3 py-2 text-sm ';
+  if (activeTab === 'summary') {
+    summaryTabClass += 'text-white border-b-2 border-emerald-500';
   } else {
-    summaryTabClass += "text-gray-400 hover:text-gray-200";
+    summaryTabClass += 'text-gray-400 hover:text-gray-200';
   }
-  let metadataTabClass = "px-3 py-2 text-sm ";
-  if (activeTab === "metadata") {
-    metadataTabClass += "text-white border-b-2 border-emerald-500";
+  let metadataTabClass = 'px-3 py-2 text-sm ';
+  if (activeTab === 'metadata') {
+    metadataTabClass += 'text-white border-b-2 border-emerald-500';
   } else {
-    metadataTabClass += "text-gray-400 hover:text-gray-200";
+    metadataTabClass += 'text-gray-400 hover:text-gray-200';
   }
-  let contentTabClass = "px-3 py-2 text-sm ";
-  if (activeTab === "content") {
-    contentTabClass += "text-white border-b-2 border-emerald-500";
+  let contentTabClass = 'px-3 py-2 text-sm ';
+  if (activeTab === 'content') {
+    contentTabClass += 'text-white border-b-2 border-emerald-500';
   } else {
-    contentTabClass += "text-gray-400 hover:text-gray-200";
+    contentTabClass += 'text-gray-400 hover:text-gray-200';
   }
 
   const handleOpenViewer = async () => {
@@ -90,8 +90,8 @@ function DocumentView() {
       setPdfUrl(url);
       setShowViewer(true);
     } catch (error) {
-      console.error("Open PDF failed:", error);
-      toast.error("Failed to open PDF");
+      console.error('Open PDF failed:', error);
+      toast.error('Failed to open PDF');
     }
   };
 
@@ -100,7 +100,7 @@ function DocumentView() {
     try {
       // when pdf is already loaded in viewer, download directly from blob URL
       if (isPdf && pdfUrl) {
-        const a = document.createElement("a");
+        const a = document.createElement('a');
         a.href = pdfUrl;
         a.download = filename;
         document.body.appendChild(a);
@@ -111,8 +111,8 @@ function DocumentView() {
       // Fallback: normal api download
       await downloadDocumentById(doc.id, filename);
     } catch (error) {
-      console.error("Download failed:", error);
-      toast.error("Failed to download document");
+      console.error('Download failed:', error);
+      toast.error('Failed to download document');
     }
   };
 
@@ -124,11 +124,11 @@ function DocumentView() {
     setShowDeleteModal(false);
     try {
       await deleteDocument(doc.id);
-      toast.success("Document deleted");
-      navigate("/documents");
+      toast.success('Document deleted');
+      navigate('/documents');
     } catch (error) {
-      console.error("Delete failed:", error);
-      toast.error("Failed to delete document");
+      console.error('Delete failed:', error);
+      toast.error('Failed to delete document');
     }
   };
 
@@ -142,13 +142,13 @@ function DocumentView() {
   };
 
   const handleStartEditSummary = () => {
-    setEditedSummary(doc.genAiSummary || "");
+    setEditedSummary(doc.genAiSummary || '');
     setIsEditingSummary(true);
   };
 
   const handleSaveName = async () => {
     if (!editedName.trim()) {
-      toast.error("Name cannot be empty");
+      toast.error('Name cannot be empty');
       return;
     }
 
@@ -157,10 +157,10 @@ function DocumentView() {
       const updatedDoc = await updateDocument(doc.id, editedName, null);
       setDoc(updatedDoc);
       setIsEditingName(false);
-      toast.success("Document name updated successfully");
+      toast.success('Document name updated successfully');
     } catch (error) {
-      console.error("Failed to update name:", error);
-      toast.error(error.message || "Failed to update document name");
+      console.error('Failed to update name:', error);
+      toast.error(error.message || 'Failed to update document name');
     } finally {
       setIsSaving(false);
     }
@@ -172,10 +172,10 @@ function DocumentView() {
       const updatedDoc = await updateDocument(doc.id, null, editedSummary);
       setDoc(updatedDoc);
       setIsEditingSummary(false);
-      toast.success("Summary updated successfully");
+      toast.success('Summary updated successfully');
     } catch (error) {
-      console.error("Failed to update summary:", error);
-      toast.error(error.message || "Failed to update summary");
+      console.error('Failed to update summary:', error);
+      toast.error(error.message || 'Failed to update summary');
     } finally {
       setIsSaving(false);
     }
@@ -183,12 +183,12 @@ function DocumentView() {
 
   const handleCancelEditName = () => {
     setIsEditingName(false);
-    setEditedName("");
+    setEditedName('');
   };
 
   const handleCancelEditSummary = () => {
     setIsEditingSummary(false);
-    setEditedSummary("");
+    setEditedSummary('');
   };
 
   return (
@@ -216,33 +216,33 @@ function DocumentView() {
           <div className="flex border-b border-gray-700 mb-3">
             <button
               type="button"
-              onClick={() => setActiveTab("summary")}
+              onClick={() => setActiveTab('summary')}
               className={summaryTabClass}
-              aria-current={activeTab === "summary"}
+              aria-current={activeTab === 'summary'}
             >
               Summary
             </button>
             <button
               type="button"
-              onClick={() => setActiveTab("content")}
+              onClick={() => setActiveTab('content')}
               className={contentTabClass}
-              aria-current={activeTab === "content"}
+              aria-current={activeTab === 'content'}
             >
               Content
             </button>
             <button
               type="button"
-              onClick={() => setActiveTab("metadata")}
+              onClick={() => setActiveTab('metadata')}
               className={metadataTabClass}
-              aria-current={activeTab === "metadata"}
+              aria-current={activeTab === 'metadata'}
             >
               Metadata
             </button>
           </div>
 
-          {activeTab === "metadata" && <MetadataTab doc={doc} />}
+          {activeTab === 'metadata' && <MetadataTab doc={doc} />}
 
-          {activeTab === "summary" && (
+          {activeTab === 'summary' && (
             <SummaryTab
               summary={doc.genAiSummary}
               documentState={doc.state}
@@ -256,7 +256,7 @@ function DocumentView() {
             />
           )}
 
-          {activeTab === "content" && <ContentTab content={doc.ocrText} />}
+          {activeTab === 'content' && <ContentTab content={doc.ocrText} />}
         </div>
 
         <div className="rounded-lg border border-gray-700 bg-[#0B0F14] self-start lg:sticky lg:top-8">

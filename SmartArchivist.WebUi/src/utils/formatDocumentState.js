@@ -5,9 +5,8 @@ export const DocumentState = {
   GenAiCompleted: 2,
   Indexed: 3,
   Completed: 4,
-  Failed: 99
+  Failed: 99,
 };
-
 
 // Converts a DocumentState value to a readable string
 export function formatDocumentState(state) {
@@ -15,18 +14,18 @@ export function formatDocumentState(state) {
 
   switch (stateValue) {
     case DocumentState.Uploaded:
-      return "Uploaded";
+      return 'Uploaded';
     case DocumentState.OcrCompleted:
-      return "OCR Completed";
+      return 'OCR Completed';
     case DocumentState.GenAiCompleted:
-      return "AI Processing Completed";
+      return 'AI Processing Completed';
     case DocumentState.Indexed:
-      return "Indexed";
+      return 'Indexed';
     case DocumentState.Completed:
-      return "Completed";
+      return 'Completed';
     case DocumentState.Failed:
-      return "Failed";
+      return 'Failed';
     default:
-      return "Unknown";
+      return 'Unknown';
   }
 }

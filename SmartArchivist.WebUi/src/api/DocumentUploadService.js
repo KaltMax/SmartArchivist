@@ -15,7 +15,7 @@ export const uploadDocument = async (file, name) => {
     const response = await axios.post(`${API_BASE_URL}/documents/upload`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
-        },
+      },
     });
 
     return validateDocumentDto(response.data);

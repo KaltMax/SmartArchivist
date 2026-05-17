@@ -7,7 +7,7 @@ function Dashboard() {
 
   // Trigger for refreshing statistics after a successful upload
   const handleUploadSuccess = () => {
-    setRefreshTrigger(prev => prev + 1);
+    setRefreshTrigger((prev) => prev + 1);
   };
 
   return (
@@ -16,7 +16,7 @@ function Dashboard() {
       <DocumentUpload onUploadSuccess={handleUploadSuccess} />
       <Statistics refreshTrigger={refreshTrigger} />
     </div>
-  )
+  );
 }
 
-export default Dashboard
+export default Dashboard;

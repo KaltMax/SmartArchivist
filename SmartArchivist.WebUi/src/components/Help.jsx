@@ -1,32 +1,31 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 function Help() {
   const [openIndex, setOpenIndex] = useState(null);
 
   const faqs = [
     {
-      question: "How do I upload a document?",
+      question: 'How do I upload a document?',
       answer:
-        "Navigate to the Dashboard and use the upload dropzone to select or drag and drop it there to upload your document.",
+        'Navigate to the Dashboard and use the upload dropzone to select or drag and drop it there to upload your document.',
     },
     {
-      question: "What file formats are supported?",
-      answer: "The system only supports PDF files for upload and processing.",
+      question: 'What file formats are supported?',
+      answer: 'The system only supports PDF files for upload and processing.',
     },
     {
-      question: "How do I search for documents?",
-      answer:
-        "Use the search bar in the Documents section to find documents by name or content.",
+      question: 'How do I search for documents?',
+      answer: 'Use the search bar in the Documents section to find documents by name or content.',
     },
     {
-      question: "How do I delete a document?",
+      question: 'How do I delete a document?',
       answer:
-        "Select the document and click the delete button. You will be asked to confirm the deletion.",
+        'Select the document and click the delete button. You will be asked to confirm the deletion.',
     },
     {
-      question: "How much does it cost to use SmartArchivist",
+      question: 'How much does it cost to use SmartArchivist',
       answer:
-        "Absolutely nothing! SmartArchivist is completely free to use, but you can buy as a coffee if you like it.",
+        'Absolutely nothing! SmartArchivist is completely free to use, but you can buy as a coffee if you like it.',
     },
   ];
 
@@ -38,9 +37,7 @@ function Help() {
     <div>
       <h1 className="text-2xl font-semibold text-white mb-4">Help & FAQs</h1>
       <div className="bg-[#010409] p-6 rounded-lg border border-gray-800 shadow-lg">
-        <h2 className="text-2xl font-bold text-white mb-6">
-          Frequently Asked Questions
-        </h2>
+        <h2 className="text-2xl font-bold text-white mb-6">Frequently Asked Questions</h2>
         <div className="space-y-3">
           {faqs.map((faq, index) => (
             <div
@@ -54,7 +51,7 @@ function Help() {
                 <span className="text-white font-bold">{faq.question}</span>
                 <svg
                   className={`w-5 h-5 text-gray-400 transition-transform ${
-                    openIndex === index ? "rotate-180" : ""
+                    openIndex === index ? 'rotate-180' : ''
                   }`}
                   fill="none"
                   stroke="currentColor"

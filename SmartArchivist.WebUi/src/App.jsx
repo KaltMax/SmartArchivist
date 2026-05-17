@@ -27,7 +27,7 @@ function App() {
     <NotificationProvider>
       <BrowserRouter>
         <div className="min-h-screen flex flex-col bg-[#1F1F1F]">
-          <Header/>
+          <Header />
           {/* Main area: Sidebar + Content */}
           <div className="flex flex-1 w-full overflow-x-hidden">
             <Sidebar />
@@ -44,7 +44,7 @@ function App() {
         </div>
       </BrowserRouter>
     </NotificationProvider>
-  )
+  );
 }
 
-export default App
+export default App;

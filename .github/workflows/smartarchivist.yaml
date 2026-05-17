@@ -123,6 +123,11 @@ jobs:
             cd SmartArchivist.WebUi
             npm ci
 
+        - name: Check formatting
+          run: |
+            cd SmartArchivist.WebUi
+            npm run format:check
+
         - name: Run linter
           run: |
             cd SmartArchivist.WebUi

@@ -1,7 +1,7 @@
-import PropTypes from "prop-types";
-import { PencilIcon, CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { formatDocumentState, DocumentState } from "../utils/formatDocumentState";
-import { getStateColor } from "../utils/getStateColor";
+import PropTypes from 'prop-types';
+import { PencilIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { formatDocumentState, DocumentState } from '../utils/formatDocumentState';
+import { getStateColor } from '../utils/getStateColor';
 
 function DocumentHeader({
   doc,
@@ -11,7 +11,7 @@ function DocumentHeader({
   onStartEditName,
   onSaveName,
   onCancelEditName,
-  onNameChange
+  onNameChange,
 }) {
   // Editing is only allowed if the document state is Completed
   const canEdit = doc.state >= DocumentState.Completed;
@@ -65,7 +65,9 @@ function DocumentHeader({
 
       {/* Processing State Badge */}
       <div className="flex items-center gap-2">
-        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${getStateColor(doc.state)}`}>
+        <span
+          className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${getStateColor(doc.state)}`}
+        >
           {formatDocumentState(doc.state)}
         </span>
       </div>
@@ -91,7 +93,7 @@ DocumentHeader.propTypes = {
   doc: PropTypes.shape({
     name: PropTypes.string.isRequired,
     state: PropTypes.number.isRequired,
-    tags: PropTypes.arrayOf(PropTypes.string)
+    tags: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
   isEditingName: PropTypes.bool.isRequired,
   editedName: PropTypes.string.isRequired,
@@ -99,7 +101,7 @@ DocumentHeader.propTypes = {
   onStartEditName: PropTypes.func.isRequired,
   onSaveName: PropTypes.func.isRequired,
   onCancelEditName: PropTypes.func.isRequired,
-  onNameChange: PropTypes.func.isRequired
+  onNameChange: PropTypes.func.isRequired,
 };
 
 export default DocumentHeader;

@@ -26,8 +26,7 @@ function Sidebar() {
     }
   }, []);
 
-  const itemBase =
-    'group flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors';
+  const itemBase = 'group flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors';
   const itemActive = 'bg-gray-800/60 text-white';
   const itemInactive = 'text-gray-300 hover:bg-gray-800/40 hover:text-white';
 
@@ -85,11 +84,7 @@ function Sidebar() {
         <nav className="px-2">
           <ul className="space-y-1">
             <li>
-              <NavLink
-                to="/"
-                className={({ isActive }) => navClass(isActive)}
-                title="Dashboard"
-              >
+              <NavLink to="/" className={({ isActive }) => navClass(isActive)} title="Dashboard">
                 <HomeIcon className="h-5 w-5" />
                 {!collapsed && <span className="truncate">Dashboard</span>}
               </NavLink>
@@ -114,4 +109,4 @@ function Sidebar() {
   );
 }
 
-export default Sidebar
+export default Sidebar;

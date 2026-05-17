@@ -534,6 +534,7 @@ Test suite using **xUnit** as testing framework and **NSubstitute** for mocking 
 
 ### SmartArchivist.WebUi
 
+- Check code formatting using Prettier
 - Lint React code using ESLint
 - Build React application
 - Run unit tests for WebUI

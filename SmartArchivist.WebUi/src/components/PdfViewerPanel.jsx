@@ -1,4 +1,4 @@
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
 function PdfViewerPanel({ doc, showViewer, pdfUrl }) {
   if (!doc) {
@@ -9,16 +9,12 @@ function PdfViewerPanel({ doc, showViewer, pdfUrl }) {
     );
   }
 
-  const isPdf = doc.fileExtension.toLowerCase() === ".pdf";
+  const isPdf = doc.fileExtension.toLowerCase() === '.pdf';
 
   if (showViewer && isPdf && pdfUrl) {
     return (
       <div className="w-full h-[70vh]">
-        <iframe
-          title={doc.name}
-          src={pdfUrl}
-          className="w-full h-full rounded-lg"
-        />
+        <iframe title={doc.name} src={pdfUrl} className="w-full h-full rounded-lg" />
       </div>
     );
   }
@@ -33,10 +29,10 @@ function PdfViewerPanel({ doc, showViewer, pdfUrl }) {
 PdfViewerPanel.propTypes = {
   doc: PropTypes.shape({
     name: PropTypes.string.isRequired,
-    fileExtension: PropTypes.string.isRequired
+    fileExtension: PropTypes.string.isRequired,
   }),
   showViewer: PropTypes.bool.isRequired,
-  pdfUrl: PropTypes.string
+  pdfUrl: PropTypes.string,
 };
 
 export default PdfViewerPanel;

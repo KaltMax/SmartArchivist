@@ -10,7 +10,7 @@ export const searchDocuments = async (query) => {
 
   try {
     const res = await axios.get(`${API_BASE_URL}/documents/search`, {
-      params: { query }
+      params: { query },
     });
 
     return validateDocumentArray(res.data);

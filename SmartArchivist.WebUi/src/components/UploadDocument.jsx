@@ -1,10 +1,10 @@
-import { useCallback, useState } from "react";
-import PropTypes from "prop-types";
-import { useDropzone } from "react-dropzone";
-import { toast } from "react-toastify";
-import { uploadDocument } from "../api/DocumentUploadService";
-import { useNotifications } from "../hooks/useNotifications";
-import { VALIDATION_RULES } from "../api/Validation";
+import { useCallback, useState } from 'react';
+import PropTypes from 'prop-types';
+import { useDropzone } from 'react-dropzone';
+import { toast } from 'react-toastify';
+import { uploadDocument } from '../api/DocumentUploadService';
+import { useNotifications } from '../hooks/useNotifications';
+import { VALIDATION_RULES } from '../api/Validation';
 
 function UploadDocument({ onUploadSuccess }) {
   const [isUploading, setIsUploading] = useState(false);
@@ -22,25 +22,23 @@ function UploadDocument({ onUploadSuccess }) {
       setUploadProgress({ current: 0, total: acceptedFiles.length });
 
       const uploadPromises = acceptedFiles.map(async (file) => {
-        const fileName = file.name.replace(".pdf", "");
+        const fileName = file.name.replace('.pdf', '');
 
         try {
           const result = await uploadDocument(file, fileName);
-          console.log("Upload result:", result);
+          console.log('Upload result:', result);
 
           // Subscribe to document processing notifications
           if (result?.id) {
             await subscribeToDocument(result.id);
-            console.log(
-              `Subscribed to notifications for document ${result.id}`
-            );
+            console.log(`Subscribed to notifications for document ${result.id}`);
           }
 
           toast.success(`Document "${fileName}" uploaded successfully!`);
           setUploadProgress((prev) => ({ ...prev, current: prev.current + 1 }));
           return { success: true, fileName };
         } catch (error) {
-          console.error("Upload error:", error);
+          console.error('Upload error:', error);
           toast.error(`Failed to upload "${fileName}": ${error.message}`);
           setUploadProgress((prev) => ({ ...prev, current: prev.current + 1 }));
           return { success: false, fileName, error: error.message };
@@ -71,7 +69,7 @@ function UploadDocument({ onUploadSuccess }) {
     onDropRejected: (rejectedFiles) => {
       // Check if rejection is due to too many files
       const tooManyFilesError = rejectedFiles.some((r) =>
-        r.errors.some((e) => e.code === "too-many-files")
+        r.errors.some((e) => e.code === 'too-many-files')
       );
 
       if (tooManyFilesError) {
@@ -81,15 +79,13 @@ function UploadDocument({ onUploadSuccess }) {
       } else {
         // Show individual errors for other rejection reasons (wrong file type, etc.)
         rejectedFiles.forEach((rejection) => {
-          const errorMessages = rejection.errors
-            .map((e) => e.message)
-            .join(", ");
+          const errorMessages = rejection.errors.map((e) => e.message).join(', ');
           toast.error(`${rejection.file.name}: ${errorMessages}`);
         });
       }
     },
     accept: {
-      "application/pdf": [".pdf"],
+      'application/pdf': ['.pdf'],
     },
     multiple: true, // Accept multiple files for upload
     maxFiles: VALIDATION_RULES.MAX_DOCUMENTS,
@@ -98,22 +94,22 @@ function UploadDocument({ onUploadSuccess }) {
 
   const getDropzoneStyles = () => {
     if (isUploading) {
-      return "border-gray-500 bg-gray-800/30 cursor-not-allowed";
+      return 'border-gray-500 bg-gray-800/30 cursor-not-allowed';
     }
     if (isDragActive) {
-      return "border-blue-500 bg-blue-900/30 cursor-pointer";
+      return 'border-blue-500 bg-blue-900/30 cursor-pointer';
     }
-    return "border-gray-600 hover:border-gray-300 bg-gray-900/30 cursor-pointer";
+    return 'border-gray-600 hover:border-gray-300 bg-gray-900/30 cursor-pointer';
   };
 
   const getTextStyles = () => {
     if (isUploading) {
-      return "text-gray-400";
+      return 'text-gray-400';
     }
     if (isDragActive) {
-      return "text-blue-400";
+      return 'text-blue-400';
     }
-    return "text-gray-200";
+    return 'text-gray-200';
   };
 
   const getDropzoneMessage = () => {
@@ -121,9 +117,9 @@ function UploadDocument({ onUploadSuccess }) {
       return `Uploading ${uploadProgress.current}/${uploadProgress.total}...`;
     }
     if (isDragActive) {
-      return "Drop the PDF files here...";
+      return 'Drop the PDF files here...';
     }
-    return "Drag & drop PDF files here, or click to select files";
+    return 'Drag & drop PDF files here, or click to select files';
   };
 
   return (
@@ -135,13 +131,10 @@ function UploadDocument({ onUploadSuccess }) {
       >
         <input {...getInputProps()} />
         <div>
-          <p className={`text-lg mb-2 ${getTextStyles()}`}>
-            {getDropzoneMessage()}
-          </p>
+          <p className={`text-lg mb-2 ${getTextStyles()}`}>{getDropzoneMessage()}</p>
           {!isDragActive && !isUploading && (
             <p className="text-gray-400 text-sm">
-              Accepts PDF files only (max {VALIDATION_RULES.MAX_DOCUMENTS} files
-              per upload)
+              Accepts PDF files only (max {VALIDATION_RULES.MAX_DOCUMENTS} files per upload)
             </p>
           )}
           {/* Progressbar for upload */}
@@ -151,9 +144,7 @@ function UploadDocument({ onUploadSuccess }) {
                 <div
                   className="bg-blue-500 h-2 rounded-full transition-all duration-300"
                   style={{
-                    width: `${
-                      (uploadProgress.current / uploadProgress.total) * 100
-                    }%`,
+                    width: `${(uploadProgress.current / uploadProgress.total) * 100}%`,
                   }}
                 />
               </div>

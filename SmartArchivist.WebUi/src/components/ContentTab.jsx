@@ -1,4 +1,4 @@
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
 function ContentTab({ content }) {
   return (
@@ -9,7 +9,7 @@ function ContentTab({ content }) {
 }
 
 ContentTab.propTypes = {
-  content: PropTypes.string
+  content: PropTypes.string,
 };
 
 export default ContentTab;

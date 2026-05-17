@@ -1,6 +1,6 @@
-import PropTypes from "prop-types";
-import { formatBytes } from "../utils/formatBytes";
-import { formatDocumentState } from "../utils/formatDocumentState";
+import PropTypes from 'prop-types';
+import { formatBytes } from '../utils/formatBytes';
+import { formatDocumentState } from '../utils/formatDocumentState';
 
 function MetadataTab({ doc }) {
   return (
@@ -43,8 +43,8 @@ MetadataTab.propTypes = {
     contentType: PropTypes.string.isRequired,
     fileSize: PropTypes.number.isRequired,
     uploadDate: PropTypes.string.isRequired,
-    state: PropTypes.number.isRequired
-  }).isRequired
+    state: PropTypes.number.isRequired,
+  }).isRequired,
 };
 
 export default MetadataTab;

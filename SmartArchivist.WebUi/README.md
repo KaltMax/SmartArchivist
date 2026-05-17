@@ -12,6 +12,7 @@ Modern React-based frontend for the SmartArchivist document management system.
 - **SignalR** - Real-time WebSocket communication for document processing notifications
 - **React Toastify** - Toast notifications
 - **Vitest** - Unit testing framework
+- **Prettier** - Code formatter
 
 ## Project Structure
 
@@ -28,6 +29,7 @@ src/
 ## Configuration
 
 The app connects to the backend via nginx reverse proxy:
+
 - **REST API**: `/api` - HTTP requests for document management
 - **SignalR Hub**: `/hubs/documents` - WebSocket connection for real-time notifications
 
@@ -36,20 +38,25 @@ Authentication uses JWT tokens managed by `AuthService`. Tokens are cached in `l
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js (recommended: v22+)
 
 ### Install Dependencies
+
 ```bash
 npm install
 ```
 
 ### Run Development Server
+
 ```bash
 npm run dev
 ```
+
 Dev server runs on `http://localhost:5173`
 
 ### Run Tests
+
 ```bash
 npm run test          # Run with coverage
 npm run test:ui       # Run with UI
@@ -58,16 +65,28 @@ npm run test:ui       # Run with UI
 **Test Strategy:** Unit tests focus on business logic (validation, utilities).
 
 ### Lint the Code
+
 ```bash
 npm run lint
 ```
 
+### Format the Code
+
+```bash
+npm run format         # Write changes
+npm run format:check   # Check only (used by CI)
+```
+
+Configuration lives in `.prettierrc.json`. CI fails on unformatted files.
+
 ### Build for Production
+
 ```bash
 npm run build
 ```
 
 ### Preview Production Build
+
 ```bash
 npm run preview
 ```

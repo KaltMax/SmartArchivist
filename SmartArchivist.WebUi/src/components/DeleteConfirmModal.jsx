@@ -1,20 +1,20 @@
-import { useEffect, useState } from "react";
-import PropTypes from "prop-types";
+import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 
-function DeleteConfirmModal({ isOpen, onConfirm, onCancel, itemName, itemType = "document" }) {
-  const [input, setInput] = useState("");
+function DeleteConfirmModal({ isOpen, onConfirm, onCancel, itemName, itemType = 'document' }) {
+  const [input, setInput] = useState('');
 
   // Reset input when modal opens
   useEffect(() => {
     if (isOpen) {
-      setInput("");
+      setInput('');
     }
   }, [isOpen]);
 
   if (!isOpen) return null;
 
   const handleConfirm = () => {
-    if (input === "delete") {
+    if (input === 'delete') {
       onConfirm();
     }
   };
@@ -23,7 +23,8 @@ function DeleteConfirmModal({ isOpen, onConfirm, onCancel, itemName, itemType = 
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
       <div className="bg-[#0B0F14] border border-gray-700 rounded-lg p-6 w-full max-w-md mx-4">
         <h2 className="text-lg text-white mb-4 break-words">
-          Do you really want to delete the {itemType} '<span className="font-semibold">{itemName}</span>'?
+          Do you really want to delete the {itemType} '
+          <span className="font-semibold">{itemName}</span>'?
         </h2>
         <p className="text-gray-300 mb-2">
           Please type <code className="text-red-500">delete</code> to confirm:
@@ -45,7 +46,7 @@ function DeleteConfirmModal({ isOpen, onConfirm, onCancel, itemName, itemType = 
           </button>
           <button
             onClick={handleConfirm}
-            disabled={input !== "delete"}
+            disabled={input !== 'delete'}
             className="px-4 py-2 bg-rose-600 text-white rounded hover:bg-rose-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             OK

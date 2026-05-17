@@ -1,6 +1,6 @@
-import PropTypes from "prop-types";
-import { PencilIcon, CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { DocumentState } from "../utils/formatDocumentState";
+import PropTypes from 'prop-types';
+import { PencilIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { DocumentState } from '../utils/formatDocumentState';
 
 function SummaryTab({
   summary,
@@ -11,7 +11,7 @@ function SummaryTab({
   onStartEdit,
   onSave,
   onCancel,
-  onSummaryChange
+  onSummaryChange,
 }) {
   // Editing is only allowed if the document state is Completed
   const canEdit = documentState >= DocumentState.Completed;
@@ -33,7 +33,9 @@ function SummaryTab({
             </div>
           )}
           <div className="text-sm text-gray-200 whitespace-pre-wrap break-words">
-            {summary || <span className="text-gray-400 italic">Summary will appear here later.</span>}
+            {summary || (
+              <span className="text-gray-400 italic">Summary will appear here later.</span>
+            )}
           </div>
         </>
       ) : (
@@ -56,7 +58,7 @@ function SummaryTab({
               className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-md bg-emerald-600 text-white hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <CheckIcon className="w-4 h-4" />
-              {isSaving ? "Saving..." : "Save"}
+              {isSaving ? 'Saving...' : 'Save'}
             </button>
             <button
               type="button"
@@ -83,7 +85,7 @@ SummaryTab.propTypes = {
   onStartEdit: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
-  onSummaryChange: PropTypes.func.isRequired
+  onSummaryChange: PropTypes.func.isRequired,
 };
 
 export default SummaryTab;

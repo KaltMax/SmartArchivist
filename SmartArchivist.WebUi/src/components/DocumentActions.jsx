@@ -1,4 +1,4 @@
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
 function DocumentActions({ isPdf, onOpenViewer, onDownload, onDelete }) {
   return (
@@ -36,7 +36,7 @@ DocumentActions.propTypes = {
   isPdf: PropTypes.bool.isRequired,
   onOpenViewer: PropTypes.func.isRequired,
   onDownload: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired
+  onDelete: PropTypes.func.isRequired,
 };
 
 export default DocumentActions;
