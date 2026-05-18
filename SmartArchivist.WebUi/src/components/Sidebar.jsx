@@ -14,54 +14,20 @@ function Sidebar() {
     const mql = matchMedia('(min-width: 768px)');
     const apply = () => setCollapsed(!mql.matches);
     apply();
-
-    if (typeof mql.addEventListener === 'function') {
-      mql.addEventListener('change', apply);
-      return () => mql.removeEventListener('change', apply);
-    } else {
-      mql.onchange = apply;
-      return () => {
-        mql.onchange = null;
-      };
-    }
+    mql.addEventListener('change', apply);
+    return () => mql.removeEventListener('change', apply);
   }, []);
 
   const itemBase = 'group flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors';
   const itemActive = 'bg-gray-800/60 text-white';
   const itemInactive = 'text-gray-300 hover:bg-gray-800/40 hover:text-white';
 
-  let asideWidthClass = 'w-64';
-  if (collapsed) {
-    asideWidthClass = 'w-14';
-  }
+  const asideWidthClass = collapsed ? 'w-14' : 'w-64';
+  const sidebarAriaLabel = collapsed ? 'Expand sidebar' : 'Collapse sidebar';
+  const ToggleIcon = collapsed ? ChevronRightIcon : ChevronLeftIcon;
 
-  let sidebarAriaLabel = 'Collapse sidebar';
-  if (collapsed) {
-    sidebarAriaLabel = 'Expand sidebar';
-  }
-
-  let justifyClass = '';
-  if (collapsed) {
-    justifyClass = 'justify-center';
-  }
-
-  let ToggleIcon = ChevronLeftIcon;
-  if (collapsed) {
-    ToggleIcon = ChevronRightIcon;
-  }
-
-  const navClass = (isActive) => {
-    let cls = `${itemBase} `;
-    if (isActive) {
-      cls += itemActive;
-    } else {
-      cls += itemInactive;
-    }
-    if (collapsed) {
-      cls += ` ${justifyClass}`;
-    }
-    return cls;
-  };
+  const navClass = (isActive) =>
+    `${itemBase} ${isActive ? itemActive : itemInactive}${collapsed ? ' justify-center' : ''}`;
 
   return (
     <aside

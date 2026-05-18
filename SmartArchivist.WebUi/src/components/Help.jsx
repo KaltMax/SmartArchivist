@@ -23,9 +23,9 @@ function Help() {
         'Select the document and click the delete button. You will be asked to confirm the deletion.',
     },
     {
-      question: 'How much does it cost to use SmartArchivist',
+      question: 'How much does it cost to use SmartArchivist?',
       answer:
-        'Absolutely nothing! SmartArchivist is completely free to use, but you can buy as a coffee if you like it.',
+        'Absolutely nothing! SmartArchivist is completely free to use, but you can buy us a coffee if you like it.',
     },
   ];
 

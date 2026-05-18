@@ -42,7 +42,7 @@ function DocumentList() {
         setDocs(data);
       } catch (error) {
         console.error('Failed to load documents:', error);
-        toast.error(error || 'Failed to load documents');
+        toast.error(error.message || 'Failed to load documents');
       } finally {
         setLoading(false);
       }
