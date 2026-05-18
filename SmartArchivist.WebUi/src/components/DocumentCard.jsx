@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { DocumentIcon } from '@heroicons/react/24/outline';
 import { formatBytes } from '../utils/formatBytes';
 import { formatDocumentState } from '../utils/formatDocumentState';
 import { getStateColor } from '../utils/getStateColor';
@@ -8,41 +9,51 @@ function DocumentCard({ doc, displayConfig }) {
   return (
     <Link
       to={`/documents/${doc.id}`}
-      className="block rounded-lg border border-gray-700 bg-[#0B0F14] p-4 shadow hover:border-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500"
+      className="block rounded-2xl border border-gray-700 bg-gradient-to-b from-[#0B0F14] to-[#070A0F] p-4 shadow-lg transition-colors duration-150 hover:border-emerald-600/50 hover:bg-gray-900/40 focus:outline-none focus:ring-2 focus:ring-emerald-500"
       title={doc.name}
       aria-label={`Open ${doc.name}`}
     >
-      <div className="text-white text-sm font-medium truncate">{doc.name}</div>
-
-      {displayConfig.state && (
-        <div className="mt-1">
+      <div className="mb-2 flex items-center justify-between">
+        <DocumentIcon className="h-5 w-5 flex-shrink-0 text-red-400" />
+        {displayConfig.state && (
           <span
-            className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getStateColor(
+            className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium ${getStateColor(
               doc.state
             )}`}
           >
             {formatDocumentState(doc.state)}
           </span>
-        </div>
-      )}
+        )}
+      </div>
 
-      {displayConfig.uploadDate && (
-        <div className="mt-1 text-xs text-gray-400">
-          Uploaded at: {new Date(doc.uploadDate).toLocaleDateString()}
-        </div>
-      )}
+      <div className="truncate text-[15px] font-medium text-white">{doc.name}</div>
 
-      {displayConfig.fileSize && (
-        <div className="mt-1 text-xs text-gray-400">Size: {formatBytes(doc.fileSize)}</div>
-      )}
-
-      {displayConfig.fileExtension && (
-        <div className="mt-1 text-xs text-gray-400">File Type: {doc.fileExtension}</div>
-      )}
-
-      {displayConfig.contentType && (
-        <div className="mt-1 text-xs text-gray-400">Content Type: {doc.contentType}</div>
-      )}
+      <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs">
+        {displayConfig.uploadDate && (
+          <>
+            <dt className="text-gray-500">Uploaded</dt>
+            <dd className="text-gray-300">{new Date(doc.uploadDate).toLocaleDateString()}</dd>
+          </>
+        )}
+        {displayConfig.fileSize && (
+          <>
+            <dt className="text-gray-500">Size</dt>
+            <dd className="text-gray-300">{formatBytes(doc.fileSize)}</dd>
+          </>
+        )}
+        {displayConfig.fileExtension && (
+          <>
+            <dt className="text-gray-500">Type</dt>
+            <dd className="text-gray-300">{doc.fileExtension}</dd>
+          </>
+        )}
+        {displayConfig.contentType && (
+          <>
+            <dt className="text-gray-500">Content</dt>
+            <dd className="text-gray-300">{doc.contentType}</dd>
+          </>
+        )}
+      </dl>
 
       {displayConfig.tags && doc.tags && doc.tags.length > 0 && (
         <div className="mt-2 flex flex-wrap gap-1">
