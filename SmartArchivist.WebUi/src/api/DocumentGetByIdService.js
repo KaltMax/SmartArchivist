@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { validateId, validateDocumentDto } from './Validation';
-import { API_BASE_URL, parseApiError } from './apiClient';
+import { API_BASE_URL, parseApiError } from './ApiClient';
 
 // GET /api/documents/{id} -> DocumentDto
 export async function getDocumentById(id) {

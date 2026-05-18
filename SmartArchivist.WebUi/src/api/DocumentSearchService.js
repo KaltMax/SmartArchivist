@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { validateDocumentArray } from './Validation';
-import { API_BASE_URL, parseApiError } from './apiClient';
+import { API_BASE_URL, parseApiError } from './ApiClient';
 
 export async function searchDocuments(query) {
   if (!query?.trim()) {

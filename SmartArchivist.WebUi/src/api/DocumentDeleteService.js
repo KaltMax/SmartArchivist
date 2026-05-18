@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { validateId } from './Validation';
-import { API_BASE_URL, parseApiError } from './apiClient';
+import { API_BASE_URL, parseApiError } from './ApiClient';
 
 export async function deleteDocument(id) {
   validateId(id);

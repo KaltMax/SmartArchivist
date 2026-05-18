@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { API_BASE_URL } from './apiClient';
+import { API_BASE_URL } from './ApiClient';
 
 const TOKEN_URL = `${API_BASE_URL}/auth/token`;
 

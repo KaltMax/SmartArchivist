@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { validateId } from './Validation';
 import { triggerDownload } from '../utils/triggerDownload';
-import { API_BASE_URL, parseApiError } from './apiClient';
+import { API_BASE_URL, parseApiError } from './ApiClient';
 
 function parseFilenameFromContentDisposition(disposition) {
   if (!disposition) return null;

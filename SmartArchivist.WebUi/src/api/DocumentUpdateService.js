@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { validateId, validateName, validateSummary, validateDocumentDto } from './Validation';
-import { API_BASE_URL, parseApiError } from './apiClient';
+import { API_BASE_URL, parseApiError } from './ApiClient';
 
 // PATCH /api/documents/{id} -> DocumentDto
 export async function updateDocument(id, name, summary) {

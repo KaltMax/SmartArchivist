@@ -117,15 +117,7 @@ function DocumentList() {
     return labels[key] || key;
   };
 
-  const sortOptions = [
-    'name',
-    'state',
-    'uploadDate',
-    'fileSize',
-    'fileExtension',
-    'contentType',
-    'tags',
-  ];
+  const sortOptions = ['name', 'state', 'uploadDate', 'fileSize', 'fileExtension', 'contentType'];
 
   const renderContent = () => {
     if (loading) {
@@ -175,7 +167,7 @@ function DocumentList() {
                         type="checkbox"
                         checked={displayConfig[key]}
                         onChange={() => toggleDisplayField(key)}
-                        className="mr-3 h-4 w-4 rounded border-gray-600 bg-gray-700 text-emerald-600 focus:ring-2 focus:ring-emerald-500 focus:ring-offset-0"
+                        className="mr-3 h-4 w-4 accent-emerald-500 focus:ring-2 focus:ring-emerald-500 focus:ring-offset-0"
                       />
                       <span className="flex-1">{getSortLabel(key)}</span>
                     </label>
