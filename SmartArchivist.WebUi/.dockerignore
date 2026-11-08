@@ -1,0 +1,9 @@
+node_modules
+dist
+coverage
+obj
+__test__
+.git
+*.esproj
+Dockerfile
+.dockerignore
