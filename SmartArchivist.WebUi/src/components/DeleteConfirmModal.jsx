@@ -11,9 +11,24 @@ function DeleteConfirmModal({ isOpen, onConfirm, onCancel, itemName, itemType = 
     }
   }, [isOpen]);
 
+  // Close modal on Escape
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        onCancel();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onCancel]);
+
   if (!isOpen) return null;
 
-  const handleConfirm = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     if (input === 'delete') {
       onConfirm();
     }
@@ -21,7 +36,10 @@ function DeleteConfirmModal({ isOpen, onConfirm, onCancel, itemName, itemType = 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
-      <div className="bg-[#0B0F14] border border-gray-700 rounded-lg p-6 w-full max-w-md mx-4">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-[#0B0F14] border border-gray-700 rounded-lg p-6 w-full max-w-md mx-4"
+      >
         <h2 className="text-lg text-white mb-4 break-words">
           Do you really want to delete the {itemType} '
           <span className="font-semibold">{itemName}</span>'?
@@ -39,20 +57,21 @@ function DeleteConfirmModal({ isOpen, onConfirm, onCancel, itemName, itemType = 
         />
         <div className="flex justify-end gap-2">
           <button
+            type="button"
             onClick={onCancel}
             className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-500"
           >
             Cancel
           </button>
           <button
-            onClick={handleConfirm}
+            type="submit"
             disabled={input !== 'delete'}
             className="px-4 py-2 bg-rose-600 text-white rounded hover:bg-rose-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             OK
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 }
